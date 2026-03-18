@@ -71,10 +71,28 @@
 }
 
 @layer utilities {
-  /* Touch target minimum (48px per WCAG) */
+  /* Touch target minimum (44px Apple HIG / 48px WCAG) */
   .touch-target {
     min-height: 48px;
     min-width: 48px;
+  }
+
+  /* Safe area insets (notch, home indicator) */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+  .pt-safe {
+    padding-top: env(safe-area-inset-top, 0);
+  }
+  .h-screen-safe {
+    height: 100dvh;
+    height: 100vh;
+    min-height: calc(100dvh - env(safe-area-inset-top, 0) - env(safe-area-inset-bottom, 0));
+  }
+
+  /* Prevent double-tap zoom on interactive elements */
+  .touch-manipulation {
+    touch-action: manipulation;
   }
 }
 

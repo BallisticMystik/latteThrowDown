@@ -165,7 +165,7 @@ export function AppShell() {
         </header>
 
         {/* Main content with page transitions */}
-        <main className="flex-1 container mx-auto max-w-4xl px-4 pb-20 lg:pb-8 pt-6">
+        <main className="flex-1 container mx-auto max-w-4xl px-4 pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] lg:pb-8 pt-6">
           <AnimatePresence mode="wait">
             <motion.div
               key={location.pathname}
@@ -177,8 +177,8 @@ export function AppShell() {
         </main>
       </div>
 
-      {/* Bottom navigation — mobile only */}
-      <nav className="btm-nav bg-base-200/80 backdrop-blur-lg border-t border-base-300 z-50 lg:hidden">
+      {/* Bottom navigation — mobile only, safe area for home indicator */}
+      <nav className="btm-nav bg-base-200/80 backdrop-blur-lg border-t border-base-300 z-50 lg:hidden pb-safe">
         {navItems.map((item) => {
           const { to, icon: Icon, label } = item;
           const isAccent = 'accent' in item && item.accent;
@@ -188,7 +188,7 @@ export function AppShell() {
               to={to}
               end={to === '/'}
               className={({ isActive }) =>
-                `touch-target flex flex-col items-center justify-center gap-0.5 transition-colors ${
+                `touch-target touch-manipulation flex flex-col items-center justify-center gap-0.5 transition-colors min-h-[56px] ${
                   isActive ? 'active text-primary' :
                   isAccent ? 'text-warning' :
                   'text-base-content/60'

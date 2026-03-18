@@ -52,7 +52,7 @@ export default function CreatePage() {
           <select
             value={selectedContest}
             onChange={(e) => setSelectedContest(e.target.value)}
-            className="select select-bordered w-full bg-base-200 border-base-300 appearance-none pr-10"
+            className="select select-bordered w-full bg-base-200 border-base-300 appearance-none pr-10 min-h-[44px] touch-manipulation"
           >
             <option value="">Select a contest...</option>
             {eligibleContests.map((c) => (
@@ -206,7 +206,7 @@ export default function CreatePage() {
         <motion.button
           whileHover={isReady ? { scale: 1.01 } : undefined}
           whileTap={isReady ? { scale: 0.98 } : undefined}
-          className={`btn btn-primary w-full gap-2 ${!isReady ? 'btn-disabled opacity-50' : ''}`}
+          className={`btn btn-primary w-full gap-2 min-h-[48px] touch-manipulation ${!isReady ? 'btn-disabled opacity-50' : ''}`}
         >
           <Trophy className="h-4 w-4" />
           Submit Entry

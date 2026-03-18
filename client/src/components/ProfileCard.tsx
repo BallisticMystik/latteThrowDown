@@ -45,7 +45,7 @@ export function ProfileCard({ profile, onFollow }: ProfileCardProps) {
             </div>
           </div>
           <button
-            className={following ? 'following' : ''}
+            className={`touch-target touch-manipulation min-h-[44px] px-4 py-2.5 ${following ? 'following' : ''}`}
             onClick={handleFollow}
           >
             {following ? 'Following' : 'Follow'}
