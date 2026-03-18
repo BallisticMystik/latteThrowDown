@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 import { createBunWebSocket } from 'hono/bun';
 import type { ServerWebSocket } from 'bun';
 import type { WSContext } from 'hono/ws';
+import { liveStreamRepo } from '../domains/content/live-repo';
 
 const { upgradeWebSocket, websocket } = createBunWebSocket<ServerWebSocket>();
 
@@ -119,7 +120,7 @@ app.get(
     },
 
     onMessage(event, ws) {
-      let payload: { action: string; channel: string };
+      let payload: { action: string; channel: string; body?: string; userId?: string };
 
       try {
         const raw = typeof event.data === 'string' ? event.data : event.data.toString();
@@ -146,6 +147,14 @@ app.get(
               timestamp: Date.now(),
             }),
           );
+
+          // Live stream viewer tracking
+          if (channel.startsWith('live:')) {
+            const streamId = channel.replace('live:', '');
+            const subscriberCount = channels.get(channel)?.size ?? 0;
+            liveStreamRepo.updateViewerCount(streamId, subscriberCount);
+            broadcast(channel, 'viewer_joined', { viewerCount: subscriberCount });
+          }
           break;
 
         case 'unsubscribe':
@@ -157,7 +166,44 @@ app.get(
               timestamp: Date.now(),
             }),
           );
+
+          // Live stream viewer tracking
+          if (channel.startsWith('live:')) {
+            const streamId = channel.replace('live:', '');
+            const subscriberCount = channels.get(channel)?.size ?? 0;
+            liveStreamRepo.updateViewerCount(streamId, subscriberCount);
+            broadcast(channel, 'viewer_left', { viewerCount: subscriberCount });
+          }
           break;
+
+        case 'chat_message': {
+          // Only allow chat messages on live: channels
+          if (!channel.startsWith('live:')) {
+            ws.send(JSON.stringify({ error: 'chat_message only allowed on live: channels' }));
+            break;
+          }
+
+          const { body: msgBody, userId } = payload;
+          if (!msgBody || typeof msgBody !== 'string' || !userId || typeof userId !== 'string') {
+            ws.send(JSON.stringify({ error: 'chat_message requires body and userId' }));
+            break;
+          }
+
+          const streamId = channel.replace('live:', '');
+          try {
+            const message = liveStreamRepo.addChatMessage(streamId, userId, msgBody);
+            broadcast(channel, 'chat_message', {
+              id: message.id,
+              streamId: message.stream_id,
+              userId: message.user_id,
+              body: message.body,
+              createdAt: message.created_at,
+            });
+          } catch (err) {
+            ws.send(JSON.stringify({ error: 'Failed to save chat message' }));
+          }
+          break;
+        }
 
         default:
           ws.send(JSON.stringify({ error: `unknown action: ${action}` }));

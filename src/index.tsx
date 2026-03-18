@@ -20,6 +20,8 @@ import notificationsRoutes from './domains/notifications/routes';
 import settingsRoutes from './domains/settings/routes';
 import mediaRoutes from './domains/media/routes';
 import reportsRoutes from './domains/reports/routes';
+import liveRoutes from './domains/content/live-routes';
+import contentRoutes from './domains/content/routes';
 
 // ---------------------------------------------------------------------------
 // App
@@ -64,6 +66,8 @@ app.route('/api/notifications', notificationsRoutes);
 app.route('/api/settings', settingsRoutes);
 app.route('/api/media', mediaRoutes);
 app.route('/api/reports', reportsRoutes);
+app.route('/api/content', contentRoutes);
+app.route('/api/content', liveRoutes);
 
 // Health check
 app.get('/api/health', (c) =>

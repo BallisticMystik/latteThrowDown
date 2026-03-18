@@ -1,8 +1,9 @@
 import { motion } from 'framer-motion';
-import { Trophy, TrendingUp, Users, Clock, ArrowRight, Flame, Star, Eye, Zap } from 'lucide-react';
+import { Trophy, TrendingUp, Users, Clock, ArrowRight, Flame, Star, Eye, Zap, Radio } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { AnimatedCard, StaggerContainer, StaggerItem } from '../components/AnimatedCard';
 import { ProfileCard, type ProfileCardData } from '../components/ProfileCard';
+import { LiveStreamsGrid } from '../components/content/LiveStreamsGrid';
 
 const featuredContest = {
   id: '1',
@@ -71,6 +72,15 @@ export default function HomePage() {
           </StaggerItem>
         ))}
       </StaggerContainer>
+
+      {/* Live Now */}
+      <section>
+        <h2 className="text-lg font-bold flex items-center gap-2 mb-4">
+          <Radio className="h-5 w-5 text-error" />
+          Live Now
+        </h2>
+        <LiveStreamsGrid />
+      </section>
 
       {/* Throwdown CTA */}
       <AnimatedCard className="border-warning/30 bg-gradient-to-r from-warning/10 via-base-200 to-primary/10 overflow-hidden" delay={0.15} hover={true}>

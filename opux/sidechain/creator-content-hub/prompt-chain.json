@@ -1,0 +1,362 @@
+{
+  "$schema": "sidechain-prompt-chain-v1",
+  "taskId": "CONTENT-001",
+  "name": "Creator Content Hub — TikTok for Baristas",
+  "description": "TikTok-style content creation system: short-form video upload, vertical scrolling feed, live streaming, likes/comments/shares, content discovery. Extends Barista Spotlight from competition platform into a content/social flywheel.",
+  "complexity": 3,
+  "tdd": true,
+  "analysis": {
+    "components": [
+      "VideoPlayer", "PostCard", "ContentFeed", "CreatePostPage", "PostDetailPage",
+      "LiveStreamPage", "LiveBadge", "CommentThread", "LikeButton", "ShareSheet",
+      "LiveStreamViewer", "GoLiveButton", "LiveChat", "ContentUploader"
+    ],
+    "hooks": [
+      "useContentFeed", "usePost", "useComments", "useLiveStream", "useLiveChat", "useVideoUpload"
+    ],
+    "queries": [
+      "GET /api/content/feed", "POST /api/content/posts", "GET /api/content/posts/:id",
+      "DELETE /api/content/posts/:id", "POST /api/content/posts/:id/like",
+      "GET /api/content/posts/:id/comments", "POST /api/content/posts/:id/comments",
+      "POST /api/content/posts/:id/share", "POST /api/media/upload",
+      "POST /api/content/live/start", "POST /api/content/live/stop",
+      "GET /api/content/live/active", "GET /api/content/live/:id"
+    ],
+    "database": [
+      "posts", "post_likes", "post_comments", "post_shares",
+      "live_streams", "live_stream_messages", "hashtags", "post_hashtags"
+    ],
+    "ui": [
+      "Content tab in bottom nav", "Creator profile content grid",
+      "Live badges on active streamers", "Content routes in App.tsx"
+    ]
+  },
+  "subtasks": [
+    {
+      "id": "A1",
+      "name": "Database migration — content tables",
+      "complexity": 2,
+      "agentType": "general-purpose",
+      "instructions": {
+        "layer1": "Create migration 005_content.sql with tables for: posts, post_likes, post_comments, post_shares, live_streams, live_stream_messages, hashtags, post_hashtags. All FKs reference existing users table. Posts reference media_assets. Include proper indexes for feed queries (user_id, created_at, is_published).",
+        "layer2": "Follow the existing migration pattern in src/db/migrations/. Use TEXT for IDs (nanoid style). Add CHECK constraints for enum-like fields. Posts need: id, user_id, media_asset_id, caption, hashtags_raw (space-separated for FTS), view_count (default 0), like_count (default 0), comment_count (default 0), share_count (default 0), is_published (boolean), created_at, updated_at. Live streams need: id, user_id, title, status (waiting|live|ended), viewer_count, started_at, ended_at, recording_asset_id (nullable, for VOD after stream ends). Include composite unique constraints: post_likes(post_id, user_id), post_hashtags(post_id, hashtag_id)."
+      },
+      "tdd": {
+        "testFirst": "Write test that runs the migration and verifies all 8 tables exist with correct columns using PRAGMA table_info()",
+        "testFile": "src/db/__tests__/005_content.test.ts",
+        "testCommand": "cd D:/latteThrowDown && bun test src/db/__tests__/005_content.test.ts",
+        "implementation": "Create src/db/migrations/005_content.sql, run migrations"
+      },
+      "files": {
+        "create": ["src/db/migrations/005_content.sql", "src/db/__tests__/005_content.test.ts"],
+        "modify": []
+      },
+      "dependencies": [],
+      "outputs": ["src/db/migrations/005_content.sql"]
+    },
+    {
+      "id": "A2",
+      "name": "Content repository — posts CRUD, likes, comments, shares",
+      "complexity": 2,
+      "agentType": "general-purpose",
+      "instructions": {
+        "layer1": "Create src/domains/content/repo.ts with ContentRepo class providing: createPost, getPostById, deletePost, getUserPosts, toggleLike, getComments (paginated), addComment, deleteComment, recordShare, getContentFeed (paginated, supports 'foryou' and 'following' modes). All methods use bun:sqlite prepared statements.",
+        "layer2": "Follow the existing repo pattern (see src/domains/feed/repo.ts for reference). The content feed query should: (1) 'foryou' mode: ORDER BY engagement score (like_count * 3 + comment_count * 2 + share_count + view_count * 0.1) weighted with recency decay, (2) 'following' mode: filter to followed users via JOIN on follows table, ORDER BY created_at DESC. toggleLike should INSERT or DELETE and update post like_count atomically. Use transactions where needed. Import db from src/db/database.ts."
+      },
+      "tdd": {
+        "testFirst": "Write tests for: createPost returns post with ID, getPostById returns null for missing, toggleLike increments/decrements like_count, addComment increments comment_count, getContentFeed returns paginated results sorted correctly",
+        "testFile": "src/domains/content/__tests__/repo.test.ts",
+        "testCommand": "cd D:/latteThrowDown && bun test src/domains/content/__tests__/repo.test.ts",
+        "implementation": "Create src/domains/content/repo.ts following existing repo patterns"
+      },
+      "files": {
+        "create": ["src/domains/content/repo.ts", "src/domains/content/__tests__/repo.test.ts"],
+        "modify": []
+      },
+      "dependencies": ["A1"],
+      "outputs": ["src/domains/content/repo.ts"]
+    },
+    {
+      "id": "A3",
+      "name": "Live stream repository — lifecycle + viewer tracking",
+      "complexity": 2,
+      "agentType": "general-purpose",
+      "instructions": {
+        "layer1": "Create src/domains/content/live-repo.ts with LiveStreamRepo class: startStream (creates session in 'waiting' status), goLive (transitions waiting→live), endStream (transitions live→ended, records ended_at), getActiveStreams (all status='live', ordered by viewer_count DESC), getStreamById, updateViewerCount, addChatMessage, getChatHistory (last N messages). Use bun:sqlite.",
+        "layer2": "Status transitions must be enforced: only waiting→live and live→ended are valid. goLive sets started_at. endStream sets ended_at and optionally links a recording_asset_id for VOD replay. Viewer count should be tracked in the DB but the real-time count will come from WebSocket connections. Chat messages stored in live_stream_messages for replay/history."
+      },
+      "tdd": {
+        "testFirst": "Write tests for: startStream creates with 'waiting' status, goLive transitions to 'live' and sets started_at, endStream transitions to 'ended', invalid transitions throw, getActiveStreams only returns live streams, addChatMessage and getChatHistory work correctly",
+        "testFile": "src/domains/content/__tests__/live-repo.test.ts",
+        "testCommand": "cd D:/latteThrowDown && bun test src/domains/content/__tests__/live-repo.test.ts",
+        "implementation": "Create src/domains/content/live-repo.ts"
+      },
+      "files": {
+        "create": ["src/domains/content/live-repo.ts", "src/domains/content/__tests__/live-repo.test.ts"],
+        "modify": []
+      },
+      "dependencies": ["A1"],
+      "outputs": ["src/domains/content/live-repo.ts"]
+    },
+    {
+      "id": "A4",
+      "name": "Content API routes — posts, feed, engagement",
+      "complexity": 2,
+      "agentType": "general-purpose",
+      "instructions": {
+        "layer1": "Create src/domains/content/routes.ts with Hono router. Endpoints: GET /feed (?mode=foryou|following, ?page, ?limit), POST /posts (requireAuth — create post with media_asset_id + caption), GET /posts/:id, DELETE /posts/:id (own posts only), POST /posts/:id/like (toggle), GET /posts/:id/comments (?page, ?limit), POST /posts/:id/comments (requireAuth — body text), POST /posts/:id/share. Mount on app as '/api/content'.",
+        "layer2": "Use existing middleware: requireAuth from src/middleware/auth.ts for write operations. Feed endpoint should be public (for discovery) but personalized when authenticated. Return ApiResponse<T> and PaginatedResponse<T> types from src/lib/types.ts. POST /posts should accept JSON body {media_asset_id, caption, hashtags?: string[]}. Parse hashtags from caption (#tag pattern) if not provided explicitly. Validate media_asset_id exists before creating post."
+      },
+      "tdd": {
+        "testFirst": "Write integration tests: GET /feed returns paginated posts, POST /posts creates post (with auth), POST /posts/:id/like toggles like, GET /posts/:id/comments returns paginated comments, DELETE /posts/:id only works for owner",
+        "testFile": "src/domains/content/__tests__/routes.test.ts",
+        "testCommand": "cd D:/latteThrowDown && bun test src/domains/content/__tests__/routes.test.ts",
+        "implementation": "Create src/domains/content/routes.ts, mount in src/index.tsx"
+      },
+      "files": {
+        "create": ["src/domains/content/routes.ts", "src/domains/content/__tests__/routes.test.ts"],
+        "modify": ["src/index.tsx"]
+      },
+      "dependencies": ["A2"],
+      "outputs": ["src/domains/content/routes.ts"]
+    },
+    {
+      "id": "A5",
+      "name": "Live stream API routes + WebSocket handlers",
+      "complexity": 3,
+      "agentType": "general-purpose",
+      "instructions": {
+        "layer1": "Create live stream REST endpoints in src/domains/content/live-routes.ts: POST /live/start (requireAuth, requireRole('barista') — start stream session), POST /live/go-live (transition waiting→live), POST /live/stop (end stream), GET /live/active (list active streams), GET /live/:id (stream detail + viewer count). Extend WebSocket hub to handle live stream channels: live:{streamId} for chat messages and viewer join/leave events.",
+        "layer2": "Mount live routes under the content router so they appear at /api/content/live/*. For WebSocket: when a client subscribes to live:{streamId}, increment viewer count and broadcast viewer_joined event. On unsubscribe/disconnect, decrement and broadcast viewer_left. Chat messages sent via WS to live:{streamId} channel should be persisted to live_stream_messages and broadcast to all subscribers. Message format: {event: 'chat_message'|'viewer_joined'|'viewer_left'|'stream_started'|'stream_ended', data: {...}}.",
+        "layer3": "Handle edge cases: stream creator disconnect (grace period before auto-ending), rate limit chat messages (max 1/second per user), sanitize chat message content, cap viewer count at actual WS connections (reconcile periodically). When stream ends, broadcast stream_ended event and save final viewer_count to DB. Consider: the stream creator's video is NOT transmitted via our WebSocket — we provide signaling/chat only. Actual video would use WebRTC or an external service like Mux/Cloudflare Stream (stub the video transport interface for now)."
+      },
+      "tdd": {
+        "testFirst": "Write tests for: POST /live/start creates stream, POST /live/go-live transitions state, POST /live/stop ends stream, GET /live/active returns only live streams, WebSocket chat message persistence",
+        "testFile": "src/domains/content/__tests__/live-routes.test.ts",
+        "testCommand": "cd D:/latteThrowDown && bun test src/domains/content/__tests__/live-routes.test.ts",
+        "implementation": "Create live-routes.ts, extend ws/hub.ts with live stream handlers"
+      },
+      "files": {
+        "create": ["src/domains/content/live-routes.ts", "src/domains/content/__tests__/live-routes.test.ts"],
+        "modify": ["src/ws/hub.ts", "src/domains/content/routes.ts"]
+      },
+      "dependencies": ["A3", "A4"],
+      "outputs": ["src/domains/content/live-routes.ts"]
+    },
+    {
+      "id": "A6",
+      "name": "Media upload implementation — file handling + validation",
+      "complexity": 2,
+      "agentType": "general-purpose",
+      "instructions": {
+        "layer1": "Implement the POST /api/media/upload endpoint in src/domains/media/routes.ts. Accept multipart/form-data with a 'file' field. Validate file type (video/mp4, video/webm, video/quicktime, image/jpeg, image/png, image/webp), enforce max file size (100MB for video, 10MB for images). Save to uploads/ directory with unique filename (nanoid). Record in media_assets table. Return the media asset record with a URL.",
+        "layer2": "Use Hono's built-in multipart parsing. Generate unique filenames: {nanoid}.{extension}. Create uploads/ directory if it doesn't exist. For video files, attempt to read duration using file metadata if possible (or accept duration_seconds as optional form field from client). The media_assets URL should be /static/uploads/{filename} (since static/ is served). Also implement GET /api/media/:id to retrieve asset metadata. Ensure uploads/ is in .gitignore."
+      },
+      "tdd": {
+        "testFirst": "Write tests for: upload accepts valid video file, rejects invalid file type, rejects oversized file, returns media asset with correct fields, GET /api/media/:id returns asset",
+        "testFile": "src/domains/media/__tests__/routes.test.ts",
+        "testCommand": "cd D:/latteThrowDown && bun test src/domains/media/__tests__/routes.test.ts",
+        "implementation": "Implement upload handler in src/domains/media/routes.ts"
+      },
+      "files": {
+        "create": ["src/domains/media/__tests__/routes.test.ts"],
+        "modify": ["src/domains/media/routes.ts", "src/domains/media/repo.ts", ".gitignore"]
+      },
+      "dependencies": ["A1"],
+      "outputs": ["src/domains/media/routes.ts"]
+    },
+    {
+      "id": "A7",
+      "name": "Frontend — Content feed page with vertical scroll",
+      "complexity": 3,
+      "agentType": "general-purpose",
+      "instructions": {
+        "layer1": "Create client/src/pages/ContentFeedPage.tsx — a TikTok-style vertical scrolling video feed. Each post fills the viewport (snap scrolling). Posts show: video player (autoplay on visible, pause on scroll away), creator avatar + name overlay, caption, like/comment/share action buttons on right side. Two tabs at top: 'For You' and 'Following'. Infinite scroll loads more posts.",
+        "layer2": "Use CSS scroll-snap-type: y mandatory on the container, scroll-snap-align: start on each post. Use IntersectionObserver to autoplay/pause videos based on visibility. Create reusable components: VideoPlayer (HTML5 <video> with play/pause on tap, muted by default, progress bar), PostCard (full-screen post container with overlays), LikeButton (animated heart with Framer Motion scale+color), CommentThread (bottom sheet that slides up), ShareSheet (bottom sheet with share options). Use the existing api.ts fetch wrapper for data fetching.",
+        "layer3": "Performance: lazy-load videos (only load src when within 1 viewport of current position). Preload next video. Handle network errors gracefully (retry button). Mobile-first: all touch targets ≥ 44px, swipe-friendly. Add skeleton loading state for initial load. The like animation should double-tap on video to trigger (like Instagram/TikTok). Comment count and like count should update optimistically on action."
+      },
+      "tdd": {
+        "testFirst": "Write component tests: ContentFeedPage renders posts, VideoPlayer plays/pauses on visibility, LikeButton toggles state, PostCard shows creator info overlay, tab switching between ForYou and Following",
+        "testFile": "client/src/pages/__tests__/ContentFeedPage.test.tsx",
+        "testCommand": "cd D:/latteThrowDown/client && bun test",
+        "implementation": "Create page + components in client/src/"
+      },
+      "files": {
+        "create": [
+          "client/src/pages/ContentFeedPage.tsx",
+          "client/src/components/content/VideoPlayer.tsx",
+          "client/src/components/content/PostCard.tsx",
+          "client/src/components/content/LikeButton.tsx",
+          "client/src/components/content/CommentThread.tsx",
+          "client/src/components/content/ShareSheet.tsx",
+          "client/src/hooks/useContentFeed.ts",
+          "client/src/hooks/usePost.ts",
+          "client/src/hooks/useComments.ts"
+        ],
+        "modify": ["client/src/App.tsx"]
+      },
+      "dependencies": ["A4"],
+      "outputs": ["ContentFeedPage.tsx", "PostCard.tsx", "VideoPlayer.tsx"]
+    },
+    {
+      "id": "A8",
+      "name": "Frontend — Live stream viewer page + live chat",
+      "complexity": 3,
+      "agentType": "general-purpose",
+      "instructions": {
+        "layer1": "Create client/src/pages/LiveStreamPage.tsx — viewer experience for watching a live stream. Shows: video area (placeholder/stub for actual video — display stream title + 'LIVE' badge + viewer count), live chat scrolling feed on bottom half, chat input field, streamer info (avatar, name, follow button). Also create a LiveStreamsGrid component showing all active streams as cards (thumbnail, streamer name, viewer count, LIVE badge).",
+        "layer2": "Connect to WebSocket channel live:{streamId} on mount. Handle events: chat_message (append to chat list, auto-scroll), viewer_joined/viewer_left (update count), stream_ended (show ended overlay with replay option if recording available). Chat input sends message via WebSocket. Use the existing WS infrastructure at /ws. Create hooks: useLiveStream (stream metadata + WS connection lifecycle), useLiveChat (chat message state + send function). The video area is a stub — show a branded placeholder with the stream title, since actual video transport (WebRTC/Mux) is deferred.",
+        "layer3": "Handle reconnection: if WS drops, show 'Reconnecting...' banner and auto-retry with exponential backoff. Rate limit outgoing chat (disable send button for 1s after sending). Auto-scroll chat unless user has scrolled up (detect with scroll position). Show 'X new messages' pill when paused. Mobile: chat input should not cause layout shift when keyboard opens (use visualViewport API or dvh units). Viewer count should animate on change (Framer Motion)."
+      },
+      "tdd": {
+        "testFirst": "Write tests: LiveStreamPage connects to WS on mount, displays chat messages, updates viewer count on events, handles stream_ended, LiveStreamsGrid renders active streams, chat input sends via WS",
+        "testFile": "client/src/pages/__tests__/LiveStreamPage.test.tsx",
+        "testCommand": "cd D:/latteThrowDown/client && bun test",
+        "implementation": "Create page + components in client/src/"
+      },
+      "files": {
+        "create": [
+          "client/src/pages/LiveStreamPage.tsx",
+          "client/src/components/content/LiveBadge.tsx",
+          "client/src/components/content/LiveChat.tsx",
+          "client/src/components/content/LiveStreamsGrid.tsx",
+          "client/src/hooks/useLiveStream.ts",
+          "client/src/hooks/useLiveChat.ts"
+        ],
+        "modify": ["client/src/App.tsx"]
+      },
+      "dependencies": ["A5"],
+      "outputs": ["LiveStreamPage.tsx", "LiveChat.tsx", "LiveStreamsGrid.tsx"]
+    },
+    {
+      "id": "A9",
+      "name": "Frontend — Create post page with video upload",
+      "complexity": 2,
+      "agentType": "general-purpose",
+      "instructions": {
+        "layer1": "Create client/src/pages/CreateContentPage.tsx — post creation flow. Steps: (1) Select/record video — file picker or camera capture, (2) Preview + trim stub (show video preview, duration), (3) Add caption + hashtags (textarea with # autocomplete stub), (4) Publish. Upload the video file to /api/media/upload, then POST /api/content/posts with the returned media_asset_id + caption.",
+        "layer2": "Create ContentUploader component: drag-and-drop zone + file input + camera button (for mobile). Show upload progress bar (track XMLHttpRequest progress or fetch with ReadableStream). Validate client-side: max 60s duration, max 100MB, accepted formats (mp4, webm, mov). Preview uses <video> element with the local blob URL. Caption input: max 500 chars with character counter. Hashtag suggestions are a future feature — for now just parse #words from caption. Create useVideoUpload hook for upload state management."
+      },
+      "tdd": {
+        "testFirst": "Write tests: CreateContentPage renders upload zone, validates file type/size, shows preview after file selection, submits post with correct payload, shows upload progress, displays error on upload failure",
+        "testFile": "client/src/pages/__tests__/CreateContentPage.test.tsx",
+        "testCommand": "cd D:/latteThrowDown/client && bun test",
+        "implementation": "Create page + upload components"
+      },
+      "files": {
+        "create": [
+          "client/src/pages/CreateContentPage.tsx",
+          "client/src/components/content/ContentUploader.tsx",
+          "client/src/hooks/useVideoUpload.ts"
+        ],
+        "modify": ["client/src/App.tsx"]
+      },
+      "dependencies": ["A6", "A4"],
+      "outputs": ["CreateContentPage.tsx", "ContentUploader.tsx"]
+    },
+    {
+      "id": "A10",
+      "name": "Frontend — Go live page for streamers",
+      "complexity": 2,
+      "agentType": "general-purpose",
+      "instructions": {
+        "layer1": "Create client/src/pages/GoLivePage.tsx — streamer's broadcast setup and live dashboard. Steps: (1) Set stream title, (2) Preview camera (getUserMedia stub), (3) Go Live button (calls POST /api/content/live/start then /live/go-live), (4) Live dashboard: viewer count, live duration timer, chat feed + reply, End Stream button. This page reuses LiveChat component from A8.",
+        "layer2": "Camera preview: use navigator.mediaDevices.getUserMedia({video: true, audio: true}) to show local preview. The actual video broadcast is stubbed (we don't transmit video via our server — this would use WebRTC/Mux in production). Show a clear 'Video broadcast requires additional setup' notice. The live dashboard layout: top section = camera preview + viewer count + duration, bottom section = live chat. GoLiveButton component with animated state transitions (idle→starting→live→ending). Use existing WS to subscribe to own live:{streamId} channel for chat."
+      },
+      "tdd": {
+        "testFirst": "Write tests: GoLivePage renders setup form, Go Live button calls API, live dashboard shows viewer count and chat, End Stream button calls stop API, timer increments while live",
+        "testFile": "client/src/pages/__tests__/GoLivePage.test.tsx",
+        "testCommand": "cd D:/latteThrowDown/client && bun test",
+        "implementation": "Create page + GoLiveButton component"
+      },
+      "files": {
+        "create": [
+          "client/src/pages/GoLivePage.tsx",
+          "client/src/components/content/GoLiveButton.tsx"
+        ],
+        "modify": ["client/src/App.tsx"]
+      },
+      "dependencies": ["A5", "A8"],
+      "outputs": ["GoLivePage.tsx", "GoLiveButton.tsx"]
+    },
+    {
+      "id": "A11",
+      "name": "Navigation integration + profile content grid + seed data",
+      "complexity": 2,
+      "agentType": "general-purpose",
+      "instructions": {
+        "layer1": "Wire everything together: (1) Add 'Content' tab to bottom nav in AppShell.tsx (video icon, between Home and Contests), (2) Add content grid tab to ProfilePage.tsx showing user's posts as a thumbnail grid, (3) Add live streams section to HomePage.tsx (active streams carousel with LIVE badges), (4) Add all new routes to App.tsx router, (5) Create seed data for content: sample posts for existing seed users with mock media references, 1 active live stream.",
+        "layer2": "Navigation: use Lucide 'Play' or 'Video' icon for Content tab. The Content tab should go to /content (ContentFeedPage). Profile content grid: 3-column thumbnail grid (like Instagram/TikTok profile), tap to open post. If user has live streams, show a 'LIVE' ring around their avatar (like Instagram Live). Seed data goes in src/db/seed.ts — add posts after the existing seed logic. Add 8-10 sample posts distributed across seed users with varied engagement counts. Routes to add: /content, /content/post/:id (PostDetailPage stub), /content/live (LiveStreamsGrid), /content/live/:id (LiveStreamPage), /content/create (CreateContentPage), /content/go-live (GoLivePage)."
+      },
+      "tdd": {
+        "testFirst": "Write tests: AppShell renders Content nav item, routes resolve to correct pages, seed script creates sample posts without errors",
+        "testFile": "client/src/components/__tests__/navigation.test.tsx",
+        "testCommand": "cd D:/latteThrowDown/client && bun test",
+        "implementation": "Modify AppShell, ProfilePage, HomePage, App.tsx, seed.ts"
+      },
+      "files": {
+        "create": ["client/src/components/__tests__/navigation.test.tsx", "client/src/pages/PostDetailPage.tsx"],
+        "modify": [
+          "client/src/components/layout/AppShell.tsx",
+          "client/src/pages/ProfilePage.tsx",
+          "client/src/pages/HomePage.tsx",
+          "client/src/App.tsx",
+          "src/db/seed.ts"
+        ]
+      },
+      "dependencies": ["A7", "A8", "A9", "A10"],
+      "outputs": ["Updated navigation", "Content routes", "Seed data"]
+    }
+  ],
+  "execution": {
+    "order": ["A1", ["A2", "A3", "A6"], ["A4", "A5"], ["A7", "A8", "A9"], "A10", "A11"],
+    "parallelizable": [
+      ["A2", "A3", "A6"],
+      ["A4", "A5"],
+      ["A7", "A8", "A9"]
+    ],
+    "checkpoints": [
+      {
+        "after": "A1",
+        "verify": "Migration runs cleanly, all 8 tables created with correct schema"
+      },
+      {
+        "after": ["A2", "A3"],
+        "verify": "Repos can CRUD posts, likes, comments, live streams; all repo tests pass"
+      },
+      {
+        "after": ["A4", "A5"],
+        "verify": "All API endpoints respond correctly; WebSocket live chat works end-to-end"
+      },
+      {
+        "after": "A6",
+        "verify": "File upload works; media asset created in DB; file saved to uploads/"
+      },
+      {
+        "after": ["A7", "A8", "A9"],
+        "verify": "All frontend pages render; video feed scrolls; live page connects WS; upload flow works"
+      },
+      {
+        "after": "A11",
+        "verify": "Full navigation works; seed data loads; all pages accessible from nav"
+      }
+    ]
+  },
+  "verification": {
+    "finalTests": "cd D:/latteThrowDown && bun test && cd client && bun test",
+    "typeCheck": "cd D:/latteThrowDown && bun run typecheck",
+    "acceptanceCriteria": [
+      "Baristas can upload short-form video content with captions and hashtags",
+      "Content feed shows posts in TikTok-style vertical scroll with autoplay",
+      "Users can like, comment on, and share posts",
+      "Feed supports 'For You' (engagement-ranked) and 'Following' (chronological) modes",
+      "Baristas can start a live stream session with title",
+      "Viewers can watch live streams and participate in real-time chat via WebSocket",
+      "Active live streams are discoverable from home page and content feed",
+      "Creator profiles show a content grid of their posts",
+      "Navigation includes Content tab accessible from anywhere",
+      "All new tables migrated, seeded with sample data",
+      "Video upload validates type/size and tracks upload progress"
+    ]
+  }
+}

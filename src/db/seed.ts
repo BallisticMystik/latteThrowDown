@@ -415,6 +415,118 @@ const TEST_NOTIFICATIONS = [
 ] as const;
 
 // ============================================================================
+// Content: Media assets, posts, hashtags, post_hashtags, live streams
+// ============================================================================
+
+const TEST_MEDIA_ASSETS = [
+  { id: 'ma_01', user_id: 'usr_barista_01', file_path: '/uploads/content/lena_rosetta_pour.mp4', file_type: 'video/mp4', file_size: 8_200_000, duration_seconds: 22 },
+  { id: 'ma_02', user_id: 'usr_barista_01', file_path: '/uploads/content/lena_morning_routine.mp4', file_type: 'video/mp4', file_size: 15_600_000, duration_seconds: 45 },
+  { id: 'ma_03', user_id: 'usr_barista_02', file_path: '/uploads/content/kai_swan_timelapse.mp4', file_type: 'video/mp4', file_size: 6_400_000, duration_seconds: 18 },
+  { id: 'ma_04', user_id: 'usr_barista_02', file_path: '/uploads/content/kai_grinder_review.mp4', file_type: 'video/mp4', file_size: 22_000_000, duration_seconds: 60 },
+  { id: 'ma_05', user_id: 'usr_barista_01', file_path: '/uploads/content/lena_tulip_closeup.jpg', file_type: 'image/jpeg', file_size: 1_200_000, duration_seconds: null },
+  { id: 'ma_06', user_id: 'usr_judge_01', file_path: '/uploads/content/marco_judging_tips.mp4', file_type: 'video/mp4', file_size: 18_000_000, duration_seconds: 55 },
+  { id: 'ma_07', user_id: 'usr_barista_02', file_path: '/uploads/content/kai_latte_battle.mp4', file_type: 'video/mp4', file_size: 12_000_000, duration_seconds: 35 },
+  { id: 'ma_08', user_id: 'usr_audience_01', file_path: '/uploads/content/audience_first_pour.mp4', file_type: 'video/mp4', file_size: 5_500_000, duration_seconds: 15 },
+  { id: 'ma_09', user_id: 'usr_barista_01', file_path: '/uploads/content/lena_competition_prep.mp4', file_type: 'video/mp4', file_size: 20_000_000, duration_seconds: 58 },
+  { id: 'ma_10', user_id: 'usr_host_01', file_path: '/uploads/content/pcc_event_highlight.mp4', file_type: 'video/mp4', file_size: 25_000_000, duration_seconds: 72 },
+] as const;
+
+const TEST_POSTS = [
+  { id: 'post_01', user_id: 'usr_barista_01', media_asset_id: 'ma_01', caption: 'Triple rosetta pour in slow motion. Whole milk, single origin Honduras. #latteart #rosetta #barista', view_count: 4200, like_count: 312, comment_count: 28, share_count: 15, is_published: 1, created_at: '2026-03-17T09:30:00.000Z' },
+  { id: 'post_02', user_id: 'usr_barista_01', media_asset_id: 'ma_02', caption: 'Morning routine at Stumptown. 5am start, dial in the grinder, pull shots until they sing. #morningroutine #espresso #stumptown', view_count: 8900, like_count: 645, comment_count: 52, share_count: 34, is_published: 1, created_at: '2026-03-16T06:15:00.000Z' },
+  { id: 'post_03', user_id: 'usr_barista_02', media_asset_id: 'ma_03', caption: 'Swan pour timelapse. Getting cleaner every day. #latteart #swan #progress', view_count: 3100, like_count: 198, comment_count: 15, share_count: 8, is_published: 1, created_at: '2026-03-16T14:20:00.000Z' },
+  { id: 'post_04', user_id: 'usr_barista_02', media_asset_id: 'ma_04', caption: 'Honest review: the new Lagom P100 grinder. Worth the hype? Short answer: absolutely. #grinderreview #coffee #lagom', view_count: 12500, like_count: 890, comment_count: 127, share_count: 65, is_published: 1, created_at: '2026-03-15T10:00:00.000Z' },
+  { id: 'post_05', user_id: 'usr_barista_01', media_asset_id: 'ma_05', caption: 'Tulip close-up. The symmetry on this one though. #latteart #tulip #pourover', view_count: 2800, like_count: 175, comment_count: 12, share_count: 6, is_published: 1, created_at: '2026-03-14T16:45:00.000Z' },
+  { id: 'post_06', user_id: 'usr_judge_01', media_asset_id: 'ma_06', caption: 'Judging tips for aspiring competitors: contrast is king. Here is what I look for in every pour. #judging #tips #competition', view_count: 6700, like_count: 423, comment_count: 38, share_count: 22, is_published: 1, created_at: '2026-03-13T11:30:00.000Z' },
+  { id: 'post_07', user_id: 'usr_barista_02', media_asset_id: 'ma_07', caption: 'Head to head at the local throwdown last night. Lost by 0.5 points but learned so much. #throwdown #latteart #competition', view_count: 5400, like_count: 356, comment_count: 44, share_count: 19, is_published: 1, created_at: '2026-03-12T20:00:00.000Z' },
+  { id: 'post_08', user_id: 'usr_audience_01', media_asset_id: 'ma_08', caption: 'My first ever latte art attempt! It is supposed to be a heart... #beginner #latteart #firstpour', view_count: 1500, like_count: 89, comment_count: 21, share_count: 3, is_published: 1, created_at: '2026-03-11T13:00:00.000Z' },
+  { id: 'post_09', user_id: 'usr_barista_01', media_asset_id: 'ma_09', caption: 'Competition prep day 14. Consistency is everything. 50 pours today, keeping only the best 3. #competition #prep #latteart', view_count: 7300, like_count: 510, comment_count: 62, share_count: 28, is_published: 1, created_at: '2026-03-10T08:00:00.000Z' },
+  { id: 'post_10', user_id: 'usr_host_01', media_asset_id: 'ma_10', caption: 'Highlights from the PNW Spring Latte Art Open qualifier event. What an incredible turnout! #pnw #latteart #event #barista', view_count: 15200, like_count: 1020, comment_count: 85, share_count: 72, is_published: 1, created_at: '2026-03-09T18:30:00.000Z' },
+] as const;
+
+const TEST_HASHTAGS = [
+  { id: 'ht_01', name: 'latteart', post_count: 7 },
+  { id: 'ht_02', name: 'rosetta', post_count: 1 },
+  { id: 'ht_03', name: 'barista', post_count: 3 },
+  { id: 'ht_04', name: 'espresso', post_count: 1 },
+  { id: 'ht_05', name: 'morningroutine', post_count: 1 },
+  { id: 'ht_06', name: 'stumptown', post_count: 1 },
+  { id: 'ht_07', name: 'swan', post_count: 1 },
+  { id: 'ht_08', name: 'progress', post_count: 1 },
+  { id: 'ht_09', name: 'grinderreview', post_count: 1 },
+  { id: 'ht_10', name: 'coffee', post_count: 1 },
+  { id: 'ht_11', name: 'lagom', post_count: 1 },
+  { id: 'ht_12', name: 'tulip', post_count: 1 },
+  { id: 'ht_13', name: 'pourover', post_count: 1 },
+  { id: 'ht_14', name: 'judging', post_count: 1 },
+  { id: 'ht_15', name: 'tips', post_count: 1 },
+  { id: 'ht_16', name: 'competition', post_count: 3 },
+  { id: 'ht_17', name: 'throwdown', post_count: 1 },
+  { id: 'ht_18', name: 'beginner', post_count: 1 },
+  { id: 'ht_19', name: 'firstpour', post_count: 1 },
+  { id: 'ht_20', name: 'prep', post_count: 1 },
+  { id: 'ht_21', name: 'pnw', post_count: 1 },
+  { id: 'ht_22', name: 'event', post_count: 1 },
+] as const;
+
+const TEST_POST_HASHTAGS = [
+  // post_01: #latteart #rosetta #barista
+  { post_id: 'post_01', hashtag_id: 'ht_01' },
+  { post_id: 'post_01', hashtag_id: 'ht_02' },
+  { post_id: 'post_01', hashtag_id: 'ht_03' },
+  // post_02: #morningroutine #espresso #stumptown
+  { post_id: 'post_02', hashtag_id: 'ht_05' },
+  { post_id: 'post_02', hashtag_id: 'ht_04' },
+  { post_id: 'post_02', hashtag_id: 'ht_06' },
+  // post_03: #latteart #swan #progress
+  { post_id: 'post_03', hashtag_id: 'ht_01' },
+  { post_id: 'post_03', hashtag_id: 'ht_07' },
+  { post_id: 'post_03', hashtag_id: 'ht_08' },
+  // post_04: #grinderreview #coffee #lagom
+  { post_id: 'post_04', hashtag_id: 'ht_09' },
+  { post_id: 'post_04', hashtag_id: 'ht_10' },
+  { post_id: 'post_04', hashtag_id: 'ht_11' },
+  // post_05: #latteart #tulip #pourover
+  { post_id: 'post_05', hashtag_id: 'ht_01' },
+  { post_id: 'post_05', hashtag_id: 'ht_12' },
+  { post_id: 'post_05', hashtag_id: 'ht_13' },
+  // post_06: #judging #tips #competition
+  { post_id: 'post_06', hashtag_id: 'ht_14' },
+  { post_id: 'post_06', hashtag_id: 'ht_15' },
+  { post_id: 'post_06', hashtag_id: 'ht_16' },
+  // post_07: #throwdown #latteart #competition
+  { post_id: 'post_07', hashtag_id: 'ht_17' },
+  { post_id: 'post_07', hashtag_id: 'ht_01' },
+  { post_id: 'post_07', hashtag_id: 'ht_16' },
+  // post_08: #beginner #latteart #firstpour
+  { post_id: 'post_08', hashtag_id: 'ht_18' },
+  { post_id: 'post_08', hashtag_id: 'ht_01' },
+  { post_id: 'post_08', hashtag_id: 'ht_19' },
+  // post_09: #competition #prep #latteart
+  { post_id: 'post_09', hashtag_id: 'ht_16' },
+  { post_id: 'post_09', hashtag_id: 'ht_20' },
+  { post_id: 'post_09', hashtag_id: 'ht_01' },
+  // post_10: #pnw #latteart #event #barista
+  { post_id: 'post_10', hashtag_id: 'ht_21' },
+  { post_id: 'post_10', hashtag_id: 'ht_01' },
+  { post_id: 'post_10', hashtag_id: 'ht_22' },
+  { post_id: 'post_10', hashtag_id: 'ht_03' },
+] as const;
+
+const TEST_LIVE_STREAMS = [
+  {
+    id: 'ls_01',
+    user_id: 'usr_barista_01',
+    title: 'Morning pour practice - come hang!',
+    status: 'live',
+    viewer_count: 24,
+    started_at: '2026-03-18T07:00:00.000Z',
+    ended_at: null,
+    recording_asset_id: null,
+  },
+] as const;
+
+// ============================================================================
 // Ranking snapshots
 // ============================================================================
 
@@ -773,6 +885,76 @@ async function seed() {
       .run('usr_barista_02', 'badge_first_entry', 'cst_finalized_01');
     db.prepare(`INSERT OR IGNORE INTO user_badges (user_id, badge_id) VALUES (?, ?)`)
       .run('usr_judge_01', 'badge_verified_judge');
+
+    // ── Content: media assets ──
+    const insertMediaAsset = db.prepare(`
+      INSERT OR IGNORE INTO media_assets (id, user_id, file_path, file_type, file_size, duration_seconds)
+      VALUES ($id, $user_id, $file_path, $file_type, $file_size, $duration_seconds)
+    `);
+    for (const ma of TEST_MEDIA_ASSETS) {
+      insertMediaAsset.run({
+        $id: ma.id,
+        $user_id: ma.user_id,
+        $file_path: ma.file_path,
+        $file_type: ma.file_type,
+        $file_size: ma.file_size,
+        $duration_seconds: ma.duration_seconds,
+      });
+    }
+
+    // ── Content: posts ──
+    const insertPost = db.prepare(`
+      INSERT OR IGNORE INTO posts (id, user_id, media_asset_id, caption, view_count, like_count, comment_count, share_count, is_published, created_at)
+      VALUES ($id, $user_id, $media_asset_id, $caption, $view_count, $like_count, $comment_count, $share_count, $is_published, $created_at)
+    `);
+    for (const p of TEST_POSTS) {
+      insertPost.run({
+        $id: p.id,
+        $user_id: p.user_id,
+        $media_asset_id: p.media_asset_id,
+        $caption: p.caption,
+        $view_count: p.view_count,
+        $like_count: p.like_count,
+        $comment_count: p.comment_count,
+        $share_count: p.share_count,
+        $is_published: p.is_published,
+        $created_at: p.created_at,
+      });
+    }
+
+    // ── Content: hashtags ──
+    const insertHashtag = db.prepare(`
+      INSERT OR IGNORE INTO hashtags (id, name, post_count) VALUES ($id, $name, $post_count)
+    `);
+    for (const ht of TEST_HASHTAGS) {
+      insertHashtag.run({ $id: ht.id, $name: ht.name, $post_count: ht.post_count });
+    }
+
+    // ── Content: post_hashtags ──
+    const insertPostHashtag = db.prepare(`
+      INSERT OR IGNORE INTO post_hashtags (post_id, hashtag_id) VALUES ($post_id, $hashtag_id)
+    `);
+    for (const ph of TEST_POST_HASHTAGS) {
+      insertPostHashtag.run({ $post_id: ph.post_id, $hashtag_id: ph.hashtag_id });
+    }
+
+    // ── Content: live streams ──
+    const insertLiveStream = db.prepare(`
+      INSERT OR IGNORE INTO live_streams (id, user_id, title, status, viewer_count, started_at, ended_at, recording_asset_id)
+      VALUES ($id, $user_id, $title, $status, $viewer_count, $started_at, $ended_at, $recording_asset_id)
+    `);
+    for (const ls of TEST_LIVE_STREAMS) {
+      insertLiveStream.run({
+        $id: ls.id,
+        $user_id: ls.user_id,
+        $title: ls.title,
+        $status: ls.status,
+        $viewer_count: ls.viewer_count,
+        $started_at: ls.started_at,
+        $ended_at: ls.ended_at,
+        $recording_asset_id: ls.recording_asset_id,
+      });
+    }
   })();
 
   // ========================================================================
@@ -792,6 +974,11 @@ async function seed() {
     ['notifications', 'SELECT COUNT(*) AS c FROM notifications'],
     ['ranking_snapshots', 'SELECT COUNT(*) AS c FROM ranking_snapshots'],
     ['user_badges', 'SELECT COUNT(*) AS c FROM user_badges'],
+    ['media_assets', 'SELECT COUNT(*) AS c FROM media_assets'],
+    ['posts', 'SELECT COUNT(*) AS c FROM posts'],
+    ['hashtags', 'SELECT COUNT(*) AS c FROM hashtags'],
+    ['post_hashtags', 'SELECT COUNT(*) AS c FROM post_hashtags'],
+    ['live_streams', 'SELECT COUNT(*) AS c FROM live_streams'],
   ] as const;
 
   console.log('Seed results:');

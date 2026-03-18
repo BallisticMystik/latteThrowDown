@@ -7,6 +7,12 @@ import LeaderboardPage from './pages/LeaderboardPage';
 import ProfilePage from './pages/ProfilePage';
 import WelcomePage from './pages/WelcomePage';
 import ThrowdownPage from './pages/ThrowdownPage';
+import CreateContentPage from './pages/CreateContentPage';
+import ContentFeedPage from './pages/ContentFeedPage';
+import LiveStreamPage from './pages/LiveStreamPage';
+import LiveBrowsePage from './pages/LiveBrowsePage';
+import PostDetailPage from './pages/PostDetailPage';
+import GoLivePage from './pages/GoLivePage';
 
 export default function App() {
   return (
@@ -15,6 +21,12 @@ export default function App() {
         <Route path="/welcome" element={<WelcomePage />} />
         <Route element={<AppShell />}>
           <Route path="/" element={<HomePage />} />
+          <Route path="/feed" element={<ContentFeedPage />} />
+          <Route path="/content/new" element={<CreateContentPage />} />
+          <Route path="/content/post/:id" element={<PostDetailPage />} />
+          <Route path="/content/live" element={<LiveBrowsePage />} />
+          <Route path="/content/live/:id" element={<LiveStreamPage />} />
+          <Route path="/content/go-live" element={<GoLivePage />} />
           <Route path="/contests" element={<ContestsPage />} />
           <Route path="/throwdown" element={<ThrowdownPage />} />
           <Route path="/create" element={<CreatePage />} />

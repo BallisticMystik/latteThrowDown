@@ -1,11 +1,11 @@
 import { Outlet, NavLink, useLocation } from 'react-router-dom';
-import { Home, Trophy, BarChart3, User, Search, Bell, Coffee, Settings, LogOut, Zap } from 'lucide-react';
+import { Home, Trophy, BarChart3, User, Search, Bell, Coffee, Settings, LogOut, Play, Zap } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const navItems = [
   { to: '/', icon: Home, label: 'Home' },
+  { to: '/feed', icon: Play, label: 'Content', accent: true },
   { to: '/contests', icon: Trophy, label: 'Contests' },
-  { to: '/throwdown', icon: Zap, label: 'Throwdown', accent: true },
   { to: '/leaderboard', icon: BarChart3, label: 'Board' },
   { to: '/profile', icon: User, label: 'Profile' },
 ] as const;
@@ -73,6 +73,36 @@ export function AppShell() {
               </NavLink>
             );
           })}
+          {/* Extra sidebar links */}
+          <div className="mt-4 pt-4 border-t border-base-300/50">
+            <NavLink
+              to="/throwdown"
+              className={({ isActive }) =>
+                `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  isActive
+                    ? 'bg-primary/15 text-primary'
+                    : 'text-warning hover:bg-warning/10 hover:text-warning'
+                }`
+              }
+            >
+              {({ isActive }) => (
+                <>
+                  <Zap className="h-5 w-5 shrink-0" strokeWidth={isActive ? 2.5 : 2} />
+                  Throwdown
+                  {!isActive && (
+                    <span className="ml-auto badge badge-warning badge-xs">NEW</span>
+                  )}
+                  {isActive && (
+                    <motion.div
+                      layoutId="sidebar-indicator"
+                      className="ml-auto w-1.5 h-1.5 rounded-full bg-primary"
+                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                    />
+                  )}
+                </>
+              )}
+            </NavLink>
+          </div>
         </nav>
 
         {/* Sidebar footer */}

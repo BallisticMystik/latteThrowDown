@@ -59,6 +59,20 @@ Phase 2 ✓ → Phase 3 next
 - [ ] Public results page
 - **Status:** pending
 
+### Phase 5B: Creator Content Hub (TikTok for Baristas) ★ NEW
+- [ ] Database migration: posts, likes, comments, shares, live_streams, hashtags (005_content.sql)
+- [ ] Content repository: posts CRUD, likes, comments, shares, content feed algorithm
+- [ ] Live stream repository: lifecycle (waiting→live→ended), viewer tracking, chat history
+- [ ] Content API routes: feed (foryou/following), posts, engagement endpoints
+- [ ] Live stream API + WebSocket: start/stop streams, real-time chat, viewer events
+- [ ] Media upload implementation: file validation, chunked upload, thumbnail generation
+- [ ] Content feed page: TikTok-style vertical scroll, autoplay, like/comment/share
+- [ ] Live stream viewer page: real-time chat, viewer count, reconnection handling
+- [ ] Create post page: video upload with progress, caption + hashtags, publish flow
+- [ ] Go live page: camera preview stub, stream setup, live dashboard with chat
+- [ ] Navigation integration: Content tab, profile content grid, live stream discovery, seed data
+- **Status:** complete — 87 tests pass, 0 type errors, 33 files created/modified
+
 ### Phase 6: Feed, Leaderboard & Discovery
 - [ ] Home feed (trending entries, live contests, recommended baristas)
 - [ ] Basic leaderboard (global, by category)

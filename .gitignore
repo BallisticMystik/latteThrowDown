@@ -31,3 +31,8 @@ Thumbs.db
 
 # Bun
 .bun/
+
+# Uploads (user-generated media)
+uploads/
+uploads_test/
+static/uploads/
