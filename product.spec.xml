@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<productSpec version="1.0">
+  <meta>
+    <productName>Barista Spotlight</productName>
+    <workingTagline>Competitive visibility for baristas</workingTagline>
+    <documentType>Full Product Spec</documentType>
+    <primaryUse>App-based contest platform for baristas with ranking, discovery, and reputation</primaryUse>
+    <productVision>
+      Build a mobile-first platform where baristas can enter contests, gain verified exposure,
+      build portable reputation, and get discovered by cafes, brands, and event organizers.
+    </productVision>
+    <coreThesis>
+      This is not just a contest app. It is a reputation engine, media engine, and talent marketplace
+      built around coffee skill performance.
+    </coreThesis>
+  </meta>
+
+  <executiveSummary>
+    <problem>
+      Baristas have limited pathways for visibility outside local cafe scenes, traditional associations,
+      or one-off live throwdowns. Existing systems are fragmented, gatekept, and often reward proximity,
+      popularity, or institutional access more than skill.
+    </problem>
+    <solution>
+      Create a contest-native app where baristas submit performance content, compete in structured challenges,
+      receive transparent scores, build ranked profiles, and translate performance into opportunity.
+    </solution>
+    <businessPremise>
+      Start with barista contests and creator-style engagement. Expand into sponsorships, hiring, event hosting,
+      analytics, education, and eventually a parallel performance-based credential ecosystem.
+    </businessPremise>
+  </executiveSummary>
+
+  <goals>
+    <goal id="G1">Give baristas a repeatable way to gain visibility beyond local geography.</goal>
+    <goal id="G2">Create transparent, auditable contest scoring that reduces black-box judging.</goal>
+    <goal id="G3">Turn skill performance into a durable reputation profile.</goal>
+    <goal id="G4">Build viral content loops around contests, voting, and rankings.</goal>
+    <goal id="G5">Create a discovery surface for cafes, sponsors, and event organizers.</goal>
+    <goal id="G6">Establish the foundation for future standards and certification alternatives.</goal>
+  </goals>
+
+  <nonGoals>
+    <nonGoal id="NG1">Not a general social network for all coffee content at launch.</nonGoal>
+    <nonGoal id="NG2">Not a full e-commerce marketplace in V1.</nonGoal>
+    <nonGoal id="NG3">Not a formal accreditation body in V1.</nonGoal>
+    <nonGoal id="NG4">Not a full POS, cafe operations, or training LMS product initially.</nonGoal>
+  </nonGoals>
+
+  <targetUsers>
+    <segment id="U1">
+      <name>Competitive Baristas</name>
+      <description>Baristas who want to showcase skill, gain recognition, compete remotely, and grow a public profile.</description>
+      <needs>
+        <need>Visibility</need>
+        <need>Fair competition</need>
+        <need>Skill recognition</need>
+        <need>Career credibility</need>
+      </needs>
+    </segment>
+    <segment id="U2">
+      <name>Cafe Owners and Managers</name>
+      <description>Businesses looking to discover talent, host contests, and build local brand engagement.</description>
+      <needs>
+        <need>Talent discovery</need>
+        <need>Event tools</need>
+        <need>Brand lift</need>
+      </needs>
+    </segment>
+    <segment id="U3">
+      <name>Coffee Brands and Sponsors</name>
+      <description>Roasters, milk brands, equipment brands, and coffee-adjacent sponsors seeking authentic reach.</description>
+      <needs>
+        <need>Sponsorship inventory</need>
+        <need>Creator alignment</need>
+        <need>Niche audience access</need>
+      </needs>
+    </segment>
+    <segment id="U4">
+      <name>Judges and Educators</name>
+      <description>Credible professionals who want to judge, mentor, build influence, and be associated with quality.</description>
+      <needs>
+        <need>Verified authority</need>
+        <need>Transparent judging tools</need>
+        <need>Professional visibility</need>
+      </needs>
+    </segment>
+    <segment id="U5">
+      <name>Coffee Enthusiasts / Audience</name>
+      <description>Fans who want to watch, vote, follow baristas, and engage in coffee culture.</description>
+      <needs>
+        <need>Entertainment</need>
+        <need>Participation</need>
+        <need>Discovery</need>
+      </needs>
+    </segment>
+  </targetUsers>
+
+  <productPillars>
+    <pillar id="P1">
+      <name>Merit Visibility</name>
+      <definition>Skill performance should create exposure, not gatekeeping or insider access.</definition>
+    </pillar>
+    <pillar id="P2">
+      <name>Transparent Competition</name>
+      <definition>Rules, judging weights, and outcomes should be visible and explainable.</definition>
+    </pillar>
+    <pillar id="P3">
+      <name>Portable Reputation</name>
+      <definition>A barista's profile should act as a living resume tied to verified performance.</definition>
+    </pillar>
+    <pillar id="P4">
+      <name>Culture as Distribution</name>
+      <definition>Contests should also function as content and community growth loops.</definition>
+    </pillar>
+    <pillar id="P5">
+      <name>Opportunity Conversion</name>
+      <definition>Recognition should translate into gigs, hires, sponsorships, and real-world advancement.</definition>
+    </pillar>
+  </productPillars>
+
+  <mvpScope>
+    <included>
+      <item>User accounts and profiles</item>
+      <item>One primary contest type: global open submission latte art challenge</item>
+      <item>Submission video upload</item>
+      <item>Judge scoring + limited audience voting</item>
+      <item>Basic leaderboard</item>
+      <item>Home feed</item>
+      <item>Notifications</item>
+      <item>Host dashboard lite</item>
+    </included>
+    <excluded>
+      <item>Full job marketplace</item>
+      <item>Complex DMs</item>
+      <item>Live streaming</item>
+      <item>Multi-contest template library</item>
+      <item>Advanced sponsor self-serve portal</item>
+    </excluded>
+  </mvpScope>
+
+  <releasePlan>
+    <release name="R1">
+      <focus>MVP beta</focus>
+      <deliverables>
+        <deliverable>Accounts and profiles</deliverable>
+        <deliverable>Contest setup for internal admins</deliverable>
+        <deliverable>Submission uploads</deliverable>
+        <deliverable>Judge scoring workflow</deliverable>
+        <deliverable>Basic public results</deliverable>
+      </deliverables>
+    </release>
+    <release name="R2">
+      <focus>Public launch</focus>
+      <deliverables>
+        <deliverable>Audience voting</deliverable>
+        <deliverable>Feed and following</deliverable>
+        <deliverable>Notifications</deliverable>
+        <deliverable>Regional leaderboards</deliverable>
+      </deliverables>
+    </release>
+    <release name="R3">
+      <focus>Monetization and expansion</focus>
+      <deliverables>
+        <deliverable>Sponsor placements</deliverable>
+        <deliverable>Host dashboard self-serve</deliverable>
+        <deliverable>Opportunity marketplace lite</deliverable>
+      </deliverables>
+    </release>
+  </releasePlan>
+</productSpec>

@@ -1,0 +1,1696 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screenMap version="1.0">
+  <meta>
+    <productName>Barista Spotlight</productName>
+    <documentType>Per Screen Map</documentType>
+    <platforms>
+      <platform>iOS</platform>
+      <platform>Android</platform>
+      <platform>Responsive Web</platform>
+    </platforms>
+    <primaryGoal>
+      Define the app surface area screen by screen, including purpose, users, components,
+      actions, states, and navigation relationships.
+    </primaryGoal>
+  </meta>
+
+  <navigationModel>
+    <globalShell>
+      <mobilePrimaryNav>
+        <item>Home</item>
+        <item>Contests</item>
+        <item>Create</item>
+        <item>Leaderboard</item>
+        <item>Profile</item>
+      </mobilePrimaryNav>
+      <secondaryAccess>
+        <item>Notifications</item>
+        <item>Search</item>
+        <item>Messages / Opportunities</item>
+        <item>Settings</item>
+      </secondaryAccess>
+      <webPrimaryNav>
+        <item>Home</item>
+        <item>Contests</item>
+        <item>Leaderboard</item>
+        <item>Opportunities</item>
+        <item>Profile</item>
+        <item>Admin / Host / Judge Console (role-based)</item>
+      </webPrimaryNav>
+    </globalShell>
+  </navigationModel>
+
+  <screenGroups>
+    <group id="SG1">
+      <name>Authentication and Onboarding</name>
+    </group>
+    <group id="SG2">
+      <name>Core Consumer Experience</name>
+    </group>
+    <group id="SG3">
+      <name>Contest Participation</name>
+    </group>
+    <group id="SG4">
+      <name>Ranking and Reputation</name>
+    </group>
+    <group id="SG5">
+      <name>Opportunities and Messaging</name>
+    </group>
+    <group id="SG6">
+      <name>Host Tools</name>
+    </group>
+    <group id="SG7">
+      <name>Judge Tools</name>
+    </group>
+    <group id="SG8">
+      <name>Admin and Moderation</name>
+    </group>
+    <group id="SG9">
+      <name>Settings and Utility</name>
+    </group>
+  </screenGroups>
+
+  <screens>
+
+    <screen id="S1" groupId="SG1">
+      <name>Splash / Launch</name>
+      <purpose>Brand entry and session bootstrap.</purpose>
+      <primaryUsers>
+        <user>All</user>
+      </primaryUsers>
+      <components>
+        <component>Logo mark</component>
+        <component>Loading state</component>
+        <component>Session check</component>
+      </components>
+      <actions>
+        <action>Auto-route based on auth state</action>
+      </actions>
+      <states>
+        <state>First launch</state>
+        <state>Authenticated</state>
+        <state>Unauthenticated</state>
+        <state>Offline fallback</state>
+      </states>
+      <navigation>
+        <to>S2</to>
+        <to>S5</to>
+        <to>S10</to>
+      </navigation>
+    </screen>
+
+    <screen id="S2" groupId="SG1">
+      <name>Welcome / Entry</name>
+      <purpose>Entry point to sign up, log in, or browse limited public surfaces.</purpose>
+      <primaryUsers>
+        <user>Unauthenticated users</user>
+      </primaryUsers>
+      <components>
+        <component>Hero statement</component>
+        <component>Sign up button</component>
+        <component>Log in button</component>
+        <component>Browse as guest option</component>
+        <component>Creator / host value teaser</component>
+      </components>
+      <actions>
+        <action>Sign up</action>
+        <action>Log in</action>
+        <action>Continue as guest</action>
+      </actions>
+      <navigation>
+        <to>S3</to>
+        <to>S4</to>
+        <to>S10</to>
+      </navigation>
+    </screen>
+
+    <screen id="S3" groupId="SG1">
+      <name>Create Account</name>
+      <purpose>Register new users and begin role routing.</purpose>
+      <primaryUsers>
+        <user>New users</user>
+      </primaryUsers>
+      <components>
+        <component>Email input</component>
+        <component>Password input</component>
+        <component>Social sign-in options</component>
+        <component>Terms acceptance</component>
+        <component>Continue CTA</component>
+      </components>
+      <actions>
+        <action>Create account</action>
+        <action>Use social auth</action>
+      </actions>
+      <states>
+        <state>Validation errors</state>
+        <state>Email already in use</state>
+        <state>Auth success</state>
+      </states>
+      <navigation>
+        <to>S5</to>
+        <to>S4</to>
+      </navigation>
+    </screen>
+
+    <screen id="S4" groupId="SG1">
+      <name>Log In</name>
+      <purpose>Authenticate returning users.</purpose>
+      <primaryUsers>
+        <user>Returning users</user>
+      </primaryUsers>
+      <components>
+        <component>Email / username field</component>
+        <component>Password field</component>
+        <component>Forgot password link</component>
+        <component>Social auth options</component>
+      </components>
+      <actions>
+        <action>Log in</action>
+        <action>Reset password</action>
+      </actions>
+      <navigation>
+        <to>S10</to>
+        <to>S6</to>
+      </navigation>
+    </screen>
+
+    <screen id="S5" groupId="SG1">
+      <name>Role Selection</name>
+      <purpose>Select primary user identity and customize onboarding path.</purpose>
+      <primaryUsers>
+        <user>New authenticated users</user>
+      </primaryUsers>
+      <components>
+        <component>Role cards</component>
+        <component>Barista option</component>
+        <component>Judge option</component>
+        <component>Host / Cafe option</component>
+        <component>Sponsor option</component>
+        <component>Audience option</component>
+      </components>
+      <actions>
+        <action>Select primary role</action>
+        <action>Continue onboarding</action>
+      </actions>
+      <navigation>
+        <to>S6</to>
+        <to>S7</to>
+        <to>S8</to>
+        <to>S9</to>
+        <to>S10</to>
+      </navigation>
+    </screen>
+
+    <screen id="S6" groupId="SG1">
+      <name>Barista Onboarding</name>
+      <purpose>Capture profile basics needed to enter contests and build public identity.</purpose>
+      <primaryUsers>
+        <user>Baristas</user>
+      </primaryUsers>
+      <components>
+        <component>Display name</component>
+        <component>Profile photo</component>
+        <component>Location</component>
+        <component>Cafe affiliation</component>
+        <component>Skill category selector</component>
+        <component>Short bio</component>
+      </components>
+      <actions>
+        <action>Save profile</action>
+        <action>Skip optional fields</action>
+      </actions>
+      <navigation>
+        <to>S10</to>
+        <to>S34</to>
+      </navigation>
+    </screen>
+
+    <screen id="S7" groupId="SG1">
+      <name>Judge Onboarding</name>
+      <purpose>Capture credentials, category expertise, and verification inputs for judges.</purpose>
+      <primaryUsers>
+        <user>Judges</user>
+      </primaryUsers>
+      <components>
+        <component>Name and bio</component>
+        <component>Expertise categories</component>
+        <component>Experience summary</component>
+        <component>Verification upload</component>
+      </components>
+      <actions>
+        <action>Submit for verification</action>
+      </actions>
+      <navigation>
+        <to>S10</to>
+        <to>S43</to>
+      </navigation>
+    </screen>
+
+    <screen id="S8" groupId="SG1">
+      <name>Host / Cafe Onboarding</name>
+      <purpose>Set up organizations that want to run contests or discover talent.</purpose>
+      <primaryUsers>
+        <user>Hosts</user>
+      </primaryUsers>
+      <components>
+        <component>Organization name</component>
+        <component>Logo upload</component>
+        <component>Location</component>
+        <component>Website</component>
+        <component>Host goals selector</component>
+      </components>
+      <actions>
+        <action>Save host profile</action>
+      </actions>
+      <navigation>
+        <to>S10</to>
+        <to>S48</to>
+      </navigation>
+    </screen>
+
+    <screen id="S9" groupId="SG1">
+      <name>Sponsor Onboarding</name>
+      <purpose>Set up brand identity and campaign goals for sponsors.</purpose>
+      <primaryUsers>
+        <user>Sponsors</user>
+      </primaryUsers>
+      <components>
+        <component>Brand name</component>
+        <component>Logo</component>
+        <component>Website</component>
+        <component>Campaign interests</component>
+      </components>
+      <actions>
+        <action>Save sponsor profile</action>
+      </actions>
+      <navigation>
+        <to>S10</to>
+        <to>S48</to>
+      </navigation>
+    </screen>
+
+    <screen id="S10" groupId="SG2">
+      <name>Home Feed</name>
+      <purpose>Main discovery surface for contests, entries, battles, and spotlight content.</purpose>
+      <primaryUsers>
+        <user>All authenticated users</user>
+        <user>Guests with limited access</user>
+      </primaryUsers>
+      <components>
+        <component>Top nav with search and notifications</component>
+        <component>Featured contest carousel</component>
+        <component>Live battles strip</component>
+        <component>Trending entries feed</component>
+        <component>Following feed switch</component>
+        <component>Editorial spotlight module</component>
+      </components>
+      <actions>
+        <action>Watch entry</action>
+        <action>Vote</action>
+        <action>Follow barista</action>
+        <action>Open contest</action>
+        <action>Open profile</action>
+      </actions>
+      <states>
+        <state>Personalized feed</state>
+        <state>Guest feed</state>
+        <state>Empty state</state>
+        <state>Offline cached state</state>
+      </states>
+      <navigation>
+        <to>S11</to>
+        <to>S14</to>
+        <to>S18</to>
+        <to>S26</to>
+        <to>S31</to>
+        <to>S54</to>
+      </navigation>
+    </screen>
+
+    <screen id="S11" groupId="SG2">
+      <name>Contest Index</name>
+      <purpose>Browse all contests by status, format, region, and category.</purpose>
+      <primaryUsers>
+        <user>All</user>
+      </primaryUsers>
+      <components>
+        <component>Status tabs</component>
+        <component>Contest cards</component>
+        <component>Category filters</component>
+        <component>Region filter</component>
+        <component>Search input</component>
+      </components>
+      <actions>
+        <action>Filter contests</action>
+        <action>Open contest detail</action>
+      </actions>
+      <navigation>
+        <to>S12</to>
+        <to>S54</to>
+      </navigation>
+    </screen>
+
+    <screen id="S12" groupId="SG2">
+      <name>Contest Detail</name>
+      <purpose>Show rules, timeline, prizes, host, judging format, and entry CTA.</purpose>
+      <primaryUsers>
+        <user>All</user>
+      </primaryUsers>
+      <components>
+        <component>Contest hero</component>
+        <component>Rules accordion</component>
+        <component>Scoring breakdown</component>
+        <component>Timeline module</component>
+        <component>Prize module</component>
+        <component>Host / sponsor cards</component>
+        <component>Enter contest CTA</component>
+        <component>View entries CTA</component>
+      </components>
+      <actions>
+        <action>Enter contest</action>
+        <action>Follow contest</action>
+        <action>Share contest</action>
+      </actions>
+      <navigation>
+        <to>S13</to>
+        <to>S15</to>
+        <to>S19</to>
+        <to>S27</to>
+      </navigation>
+    </screen>
+
+    <screen id="S13" groupId="SG2">
+      <name>Contest Rules / Scoring Fullscreen</name>
+      <purpose>Deep-dive explainer for contest criteria and scoring weights.</purpose>
+      <primaryUsers>
+        <user>All</user>
+      </primaryUsers>
+      <components>
+        <component>Criteria list</component>
+        <component>Weight visualization</component>
+        <component>Eligibility notes</component>
+        <component>FAQ</component>
+      </components>
+      <actions>
+        <action>Return to contest</action>
+      </actions>
+      <navigation>
+        <to>S12</to>
+      </navigation>
+    </screen>
+
+    <screen id="S14" groupId="SG2">
+      <name>Battle Viewer</name>
+      <purpose>Head-to-head contest comparison optimized for quick voting.</purpose>
+      <primaryUsers>
+        <user>Audience</user>
+        <user>Baristas</user>
+      </primaryUsers>
+      <components>
+        <component>Dual video / image panes</component>
+        <component>Contest context header</component>
+        <component>Vote controls</component>
+        <component>Blind judging mask toggle if enabled</component>
+        <component>Progress / next battle controls</component>
+      </components>
+      <actions>
+        <action>Vote left</action>
+        <action>Vote right</action>
+        <action>Skip</action>
+        <action>Open submission detail</action>
+      </actions>
+      <states>
+        <state>Voting open</state>
+        <state>Voting closed</state>
+        <state>Results visible</state>
+      </states>
+      <navigation>
+        <to>S15</to>
+        <to>S16</to>
+      </navigation>
+    </screen>
+
+    <screen id="S15" groupId="SG2">
+      <name>Submission Detail</name>
+      <purpose>Detailed view of a single entry with media, metadata, scores, and comments.</purpose>
+      <primaryUsers>
+        <user>All</user>
+      </primaryUsers>
+      <components>
+        <component>Media player</component>
+        <component>Barista summary card</component>
+        <component>Submission metadata</component>
+        <component>Current score summary</component>
+        <component>Judge comments</component>
+        <component>Share CTA</component>
+      </components>
+      <actions>
+        <action>Follow barista</action>
+        <action>Share entry</action>
+        <action>Report content</action>
+      </actions>
+      <navigation>
+        <to>S26</to>
+        <to>S16</to>
+      </navigation>
+    </screen>
+
+    <screen id="S16" groupId="SG2">
+      <name>Contest Results</name>
+      <purpose>Display winners, placements, score summary, and public recap.</purpose>
+      <primaryUsers>
+        <user>All</user>
+      </primaryUsers>
+      <components>
+        <component>Winner hero</component>
+        <component>Final placements list</component>
+        <component>Score breakdown</component>
+        <component>Judge panel summary</component>
+        <component>Shareable result cards</component>
+      </components>
+      <actions>
+        <action>View winner profile</action>
+        <action>Share results</action>
+        <action>Browse all entries</action>
+      </actions>
+      <navigation>
+        <to>S15</to>
+        <to>S26</to>
+      </navigation>
+    </screen>
+
+    <screen id="S17" groupId="SG2">
+      <name>Search</name>
+      <purpose>Cross-app search for baristas, contests, hosts, sponsors, and content.</purpose>
+      <primaryUsers>
+        <user>All</user>
+      </primaryUsers>
+      <components>
+        <component>Universal search input</component>
+        <component>Suggested searches</component>
+        <component>Recent searches</component>
+        <component>Type tabs</component>
+        <component>Results list</component>
+      </components>
+      <actions>
+        <action>Search query</action>
+        <action>Open result</action>
+      </actions>
+      <navigation>
+        <to>S12</to>
+        <to>S26</to>
+        <to>S48</to>
+      </navigation>
+    </screen>
+
+    <screen id="S18" groupId="SG2">
+      <name>Notifications Center</name>
+      <purpose>Central inbox for contest alerts, follows, ranks, votes, and opportunities.</purpose>
+      <primaryUsers>
+        <user>Authenticated users</user>
+      </primaryUsers>
+      <components>
+        <component>Unread filter</component>
+        <component>Notification cards</component>
+        <component>Type filters</component>
+      </components>
+      <actions>
+        <action>Open linked object</action>
+        <action>Mark read</action>
+        <action>Mark all read</action>
+      </actions>
+      <navigation>
+        <to>S12</to>
+        <to>S26</to>
+        <to>S40</to>
+      </navigation>
+    </screen>
+
+    <screen id="S19" groupId="SG3">
+      <name>Create / Submit Entry Hub</name>
+      <purpose>Single entry point for submission workflows and creation-related tools.</purpose>
+      <primaryUsers>
+        <user>Baristas</user>
+      </primaryUsers>
+      <components>
+        <component>Open eligible contests list</component>
+        <component>Draft submissions section</component>
+        <component>Past submissions shortcut</component>
+      </components>
+      <actions>
+        <action>Start new submission</action>
+        <action>Resume draft</action>
+      </actions>
+      <navigation>
+        <to>S20</to>
+        <to>S24</to>
+      </navigation>
+    </screen>
+
+    <screen id="S20" groupId="SG3">
+      <name>Submission Setup</name>
+      <purpose>Select contest and review submission requirements before recording or upload.</purpose>
+      <primaryUsers>
+        <user>Baristas</user>
+      </primaryUsers>
+      <components>
+        <component>Contest selector</component>
+        <component>Requirement checklist</component>
+        <component>Allowed media formats</component>
+        <component>Metadata requirements</component>
+      </components>
+      <actions>
+        <action>Proceed to capture</action>
+        <action>Proceed to upload</action>
+      </actions>
+      <navigation>
+        <to>S21</to>
+        <to>S22</to>
+      </navigation>
+    </screen>
+
+    <screen id="S21" groupId="SG3">
+      <name>In-App Camera / Recording</name>
+      <purpose>Capture standardized contest media natively in the app.</purpose>
+      <primaryUsers>
+        <user>Baristas</user>
+      </primaryUsers>
+      <components>
+        <component>Camera preview</component>
+        <component>Timer / duration guard</component>
+        <component>Framing overlay guides</component>
+        <component>Retake controls</component>
+      </components>
+      <actions>
+        <action>Record</action>
+        <action>Stop</action>
+        <action>Retake</action>
+        <action>Use clip</action>
+      </actions>
+      <navigation>
+        <to>S23</to>
+        <to>S20</to>
+      </navigation>
+    </screen>
+
+    <screen id="S22" groupId="SG3">
+      <name>Media Upload</name>
+      <purpose>Import contest media from device library or web upload.</purpose>
+      <primaryUsers>
+        <user>Baristas</user>
+      </primaryUsers>
+      <components>
+        <component>File picker</component>
+        <component>Upload progress</component>
+        <component>Validation messages</component>
+      </components>
+      <actions>
+        <action>Select file</action>
+        <action>Upload</action>
+        <action>Retry</action>
+      </actions>
+      <navigation>
+        <to>S23</to>
+        <to>S20</to>
+      </navigation>
+    </screen>
+
+    <screen id="S23" groupId="SG3">
+      <name>Submission Review and Metadata</name>
+      <purpose>Finalize clip, add metadata, and confirm compliance before submission.</purpose>
+      <primaryUsers>
+        <user>Baristas</user>
+      </primaryUsers>
+      <components>
+        <component>Clip preview</component>
+        <component>Trim editor</component>
+        <component>Metadata form</component>
+        <component>Terms / originality checkbox</component>
+        <component>Save draft CTA</component>
+        <component>Submit CTA</component>
+      </components>
+      <actions>
+        <action>Save draft</action>
+        <action>Submit</action>
+        <action>Edit media</action>
+      </actions>
+      <states>
+        <state>Draft</state>
+        <state>Ready to submit</state>
+        <state>Validation error</state>
+        <state>Submitted</state>
+      </states>
+      <navigation>
+        <to>S24</to>
+        <to>S25</to>
+      </navigation>
+    </screen>
+
+    <screen id="S24" groupId="SG3">
+      <name>Submission Drafts</name>
+      <purpose>Manage incomplete or editable draft submissions.</purpose>
+      <primaryUsers>
+        <user>Baristas</user>
+      </primaryUsers>
+      <components>
+        <component>Draft cards</component>
+        <component>Status labels</component>
+        <component>Resume CTA</component>
+        <component>Delete draft CTA</component>
+      </components>
+      <actions>
+        <action>Resume draft</action>
+        <action>Delete draft</action>
+      </actions>
+      <navigation>
+        <to>S23</to>
+      </navigation>
+    </screen>
+
+    <screen id="S25" groupId="SG3">
+      <name>Submission Confirmation / Tracking</name>
+      <purpose>Confirm submission and allow the barista to track review, judging, and results.</purpose>
+      <primaryUsers>
+        <user>Baristas</user>
+      </primaryUsers>
+      <components>
+        <component>Success state</component>
+        <component>Status tracker</component>
+        <component>Contest link</component>
+        <component>Share CTA</component>
+      </components>
+      <actions>
+        <action>Share submission</action>
+        <action>Go to contest</action>
+        <action>View my submissions</action>
+      </actions>
+      <navigation>
+        <to>S12</to>
+        <to>S34</to>
+      </navigation>
+    </screen>
+
+    <screen id="S26" groupId="SG4">
+      <name>Public Barista Profile</name>
+      <purpose>Public identity, portfolio, stats, contest history, and reputation surface.</purpose>
+      <primaryUsers>
+        <user>All</user>
+      </primaryUsers>
+      <components>
+        <component>Profile header</component>
+        <component>Follow button</component>
+        <component>Rank badges</component>
+        <component>Stats strip</component>
+        <component>Category tabs</component>
+        <component>Contest history</component>
+        <component>Featured entries</component>
+        <component>Opportunity button if enabled</component>
+      </components>
+      <actions>
+        <action>Follow</action>
+        <action>Share profile</action>
+        <action>Open entry</action>
+        <action>Send opportunity request</action>
+      </actions>
+      <navigation>
+        <to>S15</to>
+        <to>S27</to>
+        <to>S40</to>
+      </navigation>
+    </screen>
+
+    <screen id="S27" groupId="SG4">
+      <name>Leaderboard Home</name>
+      <purpose>Entry point into rankings by overall, category, region, and timeframe.</purpose>
+      <primaryUsers>
+        <user>All</user>
+      </primaryUsers>
+      <components>
+        <component>Leaderboard tabs</component>
+        <component>Region selector</component>
+        <component>Category selector</component>
+        <component>Time window selector</component>
+        <component>Ranked list</component>
+      </components>
+      <actions>
+        <action>Change ranking view</action>
+        <action>Open ranked profile</action>
+      </actions>
+      <navigation>
+        <to>S28</to>
+        <to>S26</to>
+      </navigation>
+    </screen>
+
+    <screen id="S28" groupId="SG4">
+      <name>Ranking Detail</name>
+      <purpose>Explain a user's rank and the inputs that shape it.</purpose>
+      <primaryUsers>
+        <user>Baristas</user>
+        <user>Curious public users</user>
+      </primaryUsers>
+      <components>
+        <component>Current rank card</component>
+        <component>Rank movement chart</component>
+        <component>Score components</component>
+        <component>Recent contributing contests</component>
+        <component>Consistency metric</component>
+      </components>
+      <actions>
+        <action>View contributing contests</action>
+      </actions>
+      <navigation>
+        <to>S16</to>
+        <to>S27</to>
+        <to>S26</to>
+      </navigation>
+    </screen>
+
+    <screen id="S29" groupId="SG4">
+      <name>Achievements and Badges</name>
+      <purpose>Display verified milestones, wins, and platform-recognized performance markers.</purpose>
+      <primaryUsers>
+        <user>All</user>
+      </primaryUsers>
+      <components>
+        <component>Badge grid</component>
+        <component>Badge definitions</component>
+        <component>Verification indicators</component>
+      </components>
+      <actions>
+        <action>Open badge detail</action>
+      </actions>
+      <navigation>
+        <to>S26</to>
+      </navigation>
+    </screen>
+
+    <screen id="S30" groupId="SG4">
+      <name>Region Explorer</name>
+      <purpose>Let users discover top baristas, contests, and hosts by geography.</purpose>
+      <primaryUsers>
+        <user>All</user>
+      </primaryUsers>
+      <components>
+        <component>Region selector</component>
+        <component>Top baristas</component>
+        <component>Top contests</component>
+        <component>Featured cafes / hosts</component>
+      </components>
+      <actions>
+        <action>Open region leaderboard</action>
+        <action>Open profile</action>
+      </actions>
+      <navigation>
+        <to>S27</to>
+        <to>S26</to>
+        <to>S48</to>
+      </navigation>
+    </screen>
+
+    <screen id="S31" groupId="SG2">
+      <name>Following Feed</name>
+      <purpose>Personalized content stream limited to followed baristas, contests, and hosts.</purpose>
+      <primaryUsers>
+        <user>Authenticated users</user>
+      </primaryUsers>
+      <components>
+        <component>Following filter tabs</component>
+        <component>Content feed</component>
+      </components>
+      <actions>
+        <action>Open content</action>
+        <action>Unfollow from inline menu</action>
+      </actions>
+      <navigation>
+        <to>S15</to>
+        <to>S12</to>
+        <to>S26</to>
+      </navigation>
+    </screen>
+
+    <screen id="S32" groupId="SG2">
+      <name>Spotlight / Editorial</name>
+      <purpose>Curated content for standout talent, themes, and community narratives.</purpose>
+      <primaryUsers>
+        <user>All</user>
+      </primaryUsers>
+      <components>
+        <component>Editorial hero</component>
+        <component>Spotlight stories</component>
+        <component>Featured videos</component>
+      </components>
+      <actions>
+        <action>Open feature</action>
+      </actions>
+      <navigation>
+        <to>S26</to>
+        <to>S15</to>
+      </navigation>
+    </screen>
+
+    <screen id="S33" groupId="SG2">
+      <name>Live Event Companion</name>
+      <purpose>Sync physical throwdowns and real-time audience interaction inside the app.</purpose>
+      <primaryUsers>
+        <user>Audience</user>
+        <user>Hosts</user>
+      </primaryUsers>
+      <components>
+        <component>Live bracket view</component>
+        <component>Current matchup</component>
+        <component>Audience vote controls</component>
+        <component>Venue metadata</component>
+      </components>
+      <actions>
+        <action>Vote live</action>
+        <action>View bracket</action>
+      </actions>
+      <navigation>
+        <to>S14</to>
+        <to>S16</to>
+      </navigation>
+    </screen>
+
+    <screen id="S34" groupId="SG4">
+      <name>My Profile Dashboard</name>
+      <purpose>Owner view of barista profile with edit tools and private metrics.</purpose>
+      <primaryUsers>
+        <user>Baristas</user>
+      </primaryUsers>
+      <components>
+        <component>Private stats</component>
+        <component>Edit profile CTA</component>
+        <component>Submission tracker</component>
+        <component>Rank snapshot</component>
+        <component>Opportunity summary</component>
+      </components>
+      <actions>
+        <action>Edit profile</action>
+        <action>Open submissions</action>
+        <action>Open opportunities</action>
+      </actions>
+      <navigation>
+        <to>S35</to>
+        <to>S24</to>
+        <to>S39</to>
+      </navigation>
+    </screen>
+
+    <screen id="S35" groupId="SG4">
+      <name>Edit Profile</name>
+      <purpose>Update public identity, bio, links, and visibility settings.</purpose>
+      <primaryUsers>
+        <user>Baristas</user>
+        <user>Hosts</user>
+        <user>Sponsors</user>
+        <user>Judges</user>
+      </primaryUsers>
+      <components>
+        <component>Editable form fields</component>
+        <component>Media uploader</component>
+        <component>Visibility toggles</component>
+      </components>
+      <actions>
+        <action>Save changes</action>
+        <action>Discard changes</action>
+      </actions>
+      <navigation>
+        <to>S34</to>
+        <to>S26</to>
+      </navigation>
+    </screen>
+
+    <screen id="S36" groupId="SG4">
+      <name>My Contest History</name>
+      <purpose>Private chronological history of all user participation and outcomes.</purpose>
+      <primaryUsers>
+        <user>Baristas</user>
+      </primaryUsers>
+      <components>
+        <component>History list</component>
+        <component>Status filters</component>
+        <component>Outcome tags</component>
+      </components>
+      <actions>
+        <action>Open result</action>
+        <action>Open submission</action>
+      </actions>
+      <navigation>
+        <to>S15</to>
+        <to>S16</to>
+      </navigation>
+    </screen>
+
+    <screen id="S37" groupId="SG4">
+      <name>Private Analytics</name>
+      <purpose>Give users performance insights beyond public profile data.</purpose>
+      <primaryUsers>
+        <user>Baristas</user>
+      </primaryUsers>
+      <components>
+        <component>Rank trend chart</component>
+        <component>Category breakdown</component>
+        <component>Engagement metrics</component>
+        <component>Follower growth</component>
+      </components>
+      <actions>
+        <action>Change date range</action>
+      </actions>
+      <navigation>
+        <to>S34</to>
+      </navigation>
+    </screen>
+
+    <screen id="S38" groupId="SG5">
+      <name>Opportunities Home</name>
+      <purpose>Central place for jobs, invitations, sponsorships, and inbound requests.</purpose>
+      <primaryUsers>
+        <user>Baristas</user>
+        <user>Hosts</user>
+        <user>Sponsors</user>
+      </primaryUsers>
+      <components>
+        <component>Tabs for jobs, invites, sponsorships, collaborations</component>
+        <component>Opportunity cards</component>
+        <component>Status filters</component>
+      </components>
+      <actions>
+        <action>Open opportunity</action>
+        <action>Respond</action>
+      </actions>
+      <navigation>
+        <to>S39</to>
+        <to>S40</to>
+      </navigation>
+    </screen>
+
+    <screen id="S39" groupId="SG5">
+      <name>Opportunity Detail</name>
+      <purpose>Detailed view of a job, sponsorship, or invitation request.</purpose>
+      <primaryUsers>
+        <user>Baristas</user>
+        <user>Hosts</user>
+        <user>Sponsors</user>
+      </primaryUsers>
+      <components>
+        <component>Sender profile card</component>
+        <component>Opportunity description</component>
+        <component>Terms / compensation block</component>
+        <component>Response actions</component>
+      </components>
+      <actions>
+        <action>Accept</action>
+        <action>Decline</action>
+        <action>Request more info</action>
+      </actions>
+      <navigation>
+        <to>S38</to>
+        <to>S40</to>
+      </navigation>
+    </screen>
+
+    <screen id="S40" groupId="SG5">
+      <name>Message / Contact Thread</name>
+      <purpose>Structured communication for accepted or active opportunity conversations.</purpose>
+      <primaryUsers>
+        <user>Authenticated users with permission</user>
+      </primaryUsers>
+      <components>
+        <component>Message timeline</component>
+        <component>Composer</component>
+        <component>Report / block controls</component>
+      </components>
+      <actions>
+        <action>Send message</action>
+        <action>Archive thread</action>
+        <action>Report user</action>
+      </actions>
+      <navigation>
+        <to>S38</to>
+        <to>S39</to>
+      </navigation>
+    </screen>
+
+    <screen id="S41" groupId="SG5">
+      <name>Create Opportunity Request</name>
+      <purpose>Allow hosts or sponsors to send structured outreach to a barista.</purpose>
+      <primaryUsers>
+        <user>Hosts</user>
+        <user>Sponsors</user>
+      </primaryUsers>
+      <components>
+        <component>Recipient summary</component>
+        <component>Opportunity type selector</component>
+        <component>Description field</component>
+        <component>Compensation field</component>
+        <component>Send CTA</component>
+      </components>
+      <actions>
+        <action>Send request</action>
+        <action>Save draft</action>
+      </actions>
+      <navigation>
+        <to>S39</to>
+        <to>S26</to>
+      </navigation>
+    </screen>
+
+    <screen id="S42" groupId="SG7">
+      <name>Judge Dashboard</name>
+      <purpose>Overview of assigned contests, pending scorecards, and judge status.</purpose>
+      <primaryUsers>
+        <user>Judges</user>
+      </primaryUsers>
+      <components>
+        <component>Assigned contests list</component>
+        <component>Pending reviews</component>
+        <component>Completed reviews</component>
+        <component>Judge reputation summary</component>
+      </components>
+      <actions>
+        <action>Open scoring queue</action>
+        <action>View conflict declarations</action>
+      </actions>
+      <navigation>
+        <to>S43</to>
+        <to>S46</to>
+      </navigation>
+    </screen>
+
+    <screen id="S43" groupId="SG7">
+      <name>Judge Scoring Queue</name>
+      <purpose>Manage assigned submissions waiting for scorecards.</purpose>
+      <primaryUsers>
+        <user>Judges</user>
+      </primaryUsers>
+      <components>
+        <component>Submission cards</component>
+        <component>Contest filter</component>
+        <component>Blind mode indicators</component>
+      </components>
+      <actions>
+        <action>Open scorecard</action>
+        <action>Defer scoring</action>
+      </actions>
+      <navigation>
+        <to>S44</to>
+        <to>S42</to>
+      </navigation>
+    </screen>
+
+    <screen id="S44" groupId="SG7">
+      <name>Judge Scorecard</name>
+      <purpose>Evaluate a submission against structured criteria.</purpose>
+      <primaryUsers>
+        <user>Judges</user>
+      </primaryUsers>
+      <components>
+        <component>Media player</component>
+        <component>Criteria scoring inputs</component>
+        <component>Comments field</component>
+        <component>Conflict declaration control</component>
+        <component>Submit scorecard CTA</component>
+      </components>
+      <actions>
+        <action>Score criteria</action>
+        <action>Save partial</action>
+        <action>Submit final scorecard</action>
+      </actions>
+      <states>
+        <state>Blind judging</state>
+        <state>Identity revealed</state>
+        <state>Partial draft</state>
+        <state>Submitted</state>
+      </states>
+      <navigation>
+        <to>S45</to>
+        <to>S43</to>
+      </navigation>
+    </screen>
+
+    <screen id="S45" groupId="SG7">
+      <name>Judge Submission Confirmation</name>
+      <purpose>Confirm submitted scorecard and move to next assignment.</purpose>
+      <primaryUsers>
+        <user>Judges</user>
+      </primaryUsers>
+      <components>
+        <component>Success state</component>
+        <component>Next submission CTA</component>
+        <component>Back to queue CTA</component>
+      </components>
+      <actions>
+        <action>Next submission</action>
+      </actions>
+      <navigation>
+        <to>S43</to>
+      </navigation>
+    </screen>
+
+    <screen id="S46" groupId="SG7">
+      <name>Judge Profile / Credibility</name>
+      <purpose>Public-facing judge credibility surface showing role, expertise, and history.</purpose>
+      <primaryUsers>
+        <user>Judges</user>
+        <user>Public</user>
+      </primaryUsers>
+      <components>
+        <component>Judge bio</component>
+        <component>Verification badge</component>
+        <component>Expertise categories</component>
+        <component>Past judged contests</component>
+      </components>
+      <actions>
+        <action>Share profile</action>
+      </actions>
+      <navigation>
+        <to>S42</to>
+      </navigation>
+    </screen>
+
+    <screen id="S47" groupId="SG6">
+      <name>Host Dashboard</name>
+      <purpose>Operational hub for cafes, organizers, and sponsors running contests.</purpose>
+      <primaryUsers>
+        <user>Hosts</user>
+        <user>Sponsors with host rights</user>
+      </primaryUsers>
+      <components>
+        <component>Contest performance summary</component>
+        <component>Upcoming contests</component>
+        <component>Submission counts</component>
+        <component>Action shortcuts</component>
+      </components>
+      <actions>
+        <action>Create contest</action>
+        <action>Manage existing contest</action>
+        <action>Open analytics</action>
+      </actions>
+      <navigation>
+        <to>S48</to>
+        <to>S49</to>
+        <to>S53</to>
+      </navigation>
+    </screen>
+
+    <screen id="S48" groupId="SG6">
+      <name>Contest Creation Wizard</name>
+      <purpose>Step-by-step workflow for creating a new contest.</purpose>
+      <primaryUsers>
+        <user>Hosts</user>
+      </primaryUsers>
+      <components>
+        <component>Template selection</component>
+        <component>Basic info form</component>
+        <component>Timeline setup</component>
+        <component>Eligibility rules</component>
+        <component>Scoring weights</component>
+        <component>Prize setup</component>
+        <component>Sponsor placements</component>
+      </components>
+      <actions>
+        <action>Save draft</action>
+        <action>Preview contest</action>
+        <action>Publish contest</action>
+      </actions>
+      <navigation>
+        <to>S12</to>
+        <to>S49</to>
+        <to>S47</to>
+      </navigation>
+    </screen>
+
+    <screen id="S49" groupId="SG6">
+      <name>Contest Management</name>
+      <purpose>Manage a single contest after draft or publication.</purpose>
+      <primaryUsers>
+        <user>Hosts</user>
+      </primaryUsers>
+      <components>
+        <component>Status controls</component>
+        <component>Submission queue summary</component>
+        <component>Judging assignments</component>
+        <component>Voting settings</component>
+        <component>Result publication controls</component>
+      </components>
+      <actions>
+        <action>Edit contest</action>
+        <action>Assign judges</action>
+        <action>Moderate submissions</action>
+        <action>Publish results</action>
+      </actions>
+      <navigation>
+        <to>S50</to>
+        <to>S51</to>
+        <to>S52</to>
+        <to>S16</to>
+      </navigation>
+    </screen>
+
+    <screen id="S50" groupId="SG6">
+      <name>Submission Review Queue</name>
+      <purpose>Moderate incoming entries before they go live or into judging.</purpose>
+      <primaryUsers>
+        <user>Hosts</user>
+        <user>Moderators</user>
+      </primaryUsers>
+      <components>
+        <component>Submission preview cards</component>
+        <component>Validation flags</component>
+        <component>Approve / reject controls</component>
+        <component>Reason templates</component>
+      </components>
+      <actions>
+        <action>Approve</action>
+        <action>Reject</action>
+        <action>Request revision</action>
+      </actions>
+      <navigation>
+        <to>S49</to>
+        <to>S15</to>
+      </navigation>
+    </screen>
+
+    <screen id="S51" groupId="SG6">
+      <name>Judge Assignment</name>
+      <purpose>Assign judges to contests or rounds and manage conflicts.</purpose>
+      <primaryUsers>
+        <user>Hosts</user>
+      </primaryUsers>
+      <components>
+        <component>Judge directory</component>
+        <component>Availability indicators</component>
+        <component>Conflict warnings</component>
+        <component>Assignment matrix</component>
+      </components>
+      <actions>
+        <action>Assign judge</action>
+        <action>Remove judge</action>
+        <action>Confirm panel</action>
+      </actions>
+      <navigation>
+        <to>S49</to>
+        <to>S46</to>
+      </navigation>
+    </screen>
+
+    <screen id="S52" groupId="SG6">
+      <name>Result Publication</name>
+      <purpose>Finalize placements and push contest results public.</purpose>
+      <primaryUsers>
+        <user>Hosts</user>
+      </primaryUsers>
+      <components>
+        <component>Pre-publication checklist</component>
+        <component>Result preview</component>
+        <component>Announcement text editor</component>
+      </components>
+      <actions>
+        <action>Publish results</action>
+        <action>Schedule publication</action>
+      </actions>
+      <navigation>
+        <to>S16</to>
+        <to>S49</to>
+      </navigation>
+    </screen>
+
+    <screen id="S53" groupId="SG6">
+      <name>Host Analytics</name>
+      <purpose>Measure contest performance, engagement, and sponsor outcomes.</purpose>
+      <primaryUsers>
+        <user>Hosts</user>
+        <user>Sponsors</user>
+      </primaryUsers>
+      <components>
+        <component>Participation metrics</component>
+        <component>Engagement metrics</component>
+        <component>Regional heat maps</component>
+        <component>Sponsor impression summary</component>
+      </components>
+      <actions>
+        <action>Change timeframe</action>
+        <action>Export report</action>
+      </actions>
+      <navigation>
+        <to>S47</to>
+        <to>S49</to>
+      </navigation>
+    </screen>
+
+    <screen id="S54" groupId="SG9">
+      <name>Filters / Sort Modal</name>
+      <purpose>Universal filtering system used by feed, contests, and leaderboards.</purpose>
+      <primaryUsers>
+        <user>All</user>
+      </primaryUsers>
+      <components>
+        <component>Filter chips</component>
+        <component>Sort options</component>
+        <component>Apply / reset controls</component>
+      </components>
+      <actions>
+        <action>Apply filters</action>
+        <action>Reset filters</action>
+      </actions>
+      <navigation>
+        <to>S10</to>
+        <to>S11</to>
+        <to>S27</to>
+      </navigation>
+    </screen>
+
+    <screen id="S55" groupId="SG9">
+      <name>Settings</name>
+      <purpose>Account-level controls and preferences.</purpose>
+      <primaryUsers>
+        <user>Authenticated users</user>
+      </primaryUsers>
+      <components>
+        <component>Account settings</component>
+        <component>Notification settings</component>
+        <component>Privacy settings</component>
+        <component>Blocked users</component>
+        <component>Sign out</component>
+      </components>
+      <actions>
+        <action>Update preferences</action>
+        <action>Sign out</action>
+      </actions>
+      <navigation>
+        <to>S56</to>
+        <to>S57</to>
+        <to>S58</to>
+      </navigation>
+    </screen>
+
+    <screen id="S56" groupId="SG9">
+      <name>Notification Preferences</name>
+      <purpose>Control what alerts users receive and where.</purpose>
+      <primaryUsers>
+        <user>Authenticated users</user>
+      </primaryUsers>
+      <components>
+        <component>Push toggles</component>
+        <component>Email toggles</component>
+        <component>Category-level controls</component>
+      </components>
+      <actions>
+        <action>Save preferences</action>
+      </actions>
+      <navigation>
+        <to>S55</to>
+      </navigation>
+    </screen>
+
+    <screen id="S57" groupId="SG9">
+      <name>Privacy and Visibility</name>
+      <purpose>Configure profile visibility, discoverability, and contact permissions.</purpose>
+      <primaryUsers>
+        <user>Authenticated users</user>
+      </primaryUsers>
+      <components>
+        <component>Profile visibility toggle</component>
+        <component>Opportunity inbox permissions</component>
+        <component>Search discoverability</component>
+      </components>
+      <actions>
+        <action>Save privacy settings</action>
+      </actions>
+      <navigation>
+        <to>S55</to>
+      </navigation>
+    </screen>
+
+    <screen id="S58" groupId="SG9">
+      <name>Verification Center</name>
+      <purpose>Manage identity, role, and credential verification.</purpose>
+      <primaryUsers>
+        <user>Baristas</user>
+        <user>Judges</user>
+        <user>Hosts</user>
+      </primaryUsers>
+      <components>
+        <component>Verification status cards</component>
+        <component>Document upload</component>
+        <component>Review timeline</component>
+      </components>
+      <actions>
+        <action>Submit verification</action>
+        <action>View decision</action>
+      </actions>
+      <navigation>
+        <to>S55</to>
+      </navigation>
+    </screen>
+
+    <screen id="S59" groupId="SG8">
+      <name>Admin Dashboard</name>
+      <purpose>Global system oversight for moderators and platform operators.</purpose>
+      <primaryUsers>
+        <user>Admins</user>
+      </primaryUsers>
+      <components>
+        <component>Operational KPIs</component>
+        <component>Fraud alerts</component>
+        <component>User moderation queue</component>
+        <component>Contest moderation queue</component>
+      </components>
+      <actions>
+        <action>Open queue</action>
+        <action>Investigate issue</action>
+      </actions>
+      <navigation>
+        <to>S60</to>
+        <to>S61</to>
+        <to>S62</to>
+      </navigation>
+    </screen>
+
+    <screen id="S60" groupId="SG8">
+      <name>User Moderation Queue</name>
+      <purpose>Review reported users and enforce platform policy.</purpose>
+      <primaryUsers>
+        <user>Admins</user>
+      </primaryUsers>
+      <components>
+        <component>Reported user list</component>
+        <component>Case summary</component>
+        <component>Enforcement controls</component>
+      </components>
+      <actions>
+        <action>Warn user</action>
+        <action>Suspend user</action>
+        <action>Dismiss case</action>
+      </actions>
+      <navigation>
+        <to>S59</to>
+      </navigation>
+    </screen>
+
+    <screen id="S61" groupId="SG8">
+      <name>Content / Submission Moderation Queue</name>
+      <purpose>Review flagged content, suspected plagiarism, or policy violations.</purpose>
+      <primaryUsers>
+        <user>Admins</user>
+        <user>Moderators</user>
+      </primaryUsers>
+      <components>
+        <component>Flagged content list</component>
+        <component>Evidence panel</component>
+        <component>Decision controls</component>
+      </components>
+      <actions>
+        <action>Remove content</action>
+        <action>Restore content</action>
+        <action>Escalate case</action>
+      </actions>
+      <navigation>
+        <to>S59</to>
+        <to>S15</to>
+      </navigation>
+    </screen>
+
+    <screen id="S62" groupId="SG8">
+      <name>Vote Integrity / Fraud Review</name>
+      <purpose>Investigate brigading, suspicious activity, and score manipulation attempts.</purpose>
+      <primaryUsers>
+        <user>Admins</user>
+      </primaryUsers>
+      <components>
+        <component>Anomaly alerts</component>
+        <component>Vote pattern graphs</component>
+        <component>Linked account analysis</component>
+      </components>
+      <actions>
+        <action>Invalidate votes</action>
+        <action>Escalate contest review</action>
+      </actions>
+      <navigation>
+        <to>S59</to>
+        <to>S49</to>
+      </navigation>
+    </screen>
+
+    <screen id="S63" groupId="SG9">
+      <name>Error / Empty / Edge States Library</name>
+      <purpose>Shared system state definitions for UX consistency.</purpose>
+      <primaryUsers>
+        <user>All</user>
+      </primaryUsers>
+      <components>
+        <component>Empty feed state</component>
+        <component>No contests found state</component>
+        <component>Upload failed state</component>
+        <component>No opportunities state</component>
+        <component>Offline state</component>
+      </components>
+      <actions>
+        <action>Retry</action>
+        <action>Go back</action>
+        <action>Discover content</action>
+      </actions>
+    </screen>
+
+  </screens>
+
+  <coreFlows>
+    <flow id="F1">
+      <name>First-Time Barista Entry Flow</name>
+      <path>
+        <step>S1</step>
+        <step>S2</step>
+        <step>S3</step>
+        <step>S5</step>
+        <step>S6</step>
+        <step>S10</step>
+        <step>S11</step>
+        <step>S12</step>
+        <step>S19</step>
+        <step>S20</step>
+        <step>S21 or S22</step>
+        <step>S23</step>
+        <step>S25</step>
+      </path>
+    </flow>
+
+    <flow id="F2">
+      <name>Audience Battle Engagement Flow</name>
+      <path>
+        <step>S10</step>
+        <step>S14</step>
+        <step>S15</step>
+        <step>S26</step>
+        <step>S31</step>
+      </path>
+    </flow>
+
+    <flow id="F3">
+      <name>Host Contest Creation Flow</name>
+      <path>
+        <step>S1</step>
+        <step>S2</step>
+        <step>S3</step>
+        <step>S5</step>
+        <step>S8</step>
+        <step>S47</step>
+        <step>S48</step>
+        <step>S49</step>
+        <step>S50</step>
+        <step>S51</step>
+        <step>S52</step>
+      </path>
+    </flow>
+
+    <flow id="F4">
+      <name>Judge Scoring Flow</name>
+      <path>
+        <step>S1</step>
+        <step>S4</step>
+        <step>S42</step>
+        <step>S43</step>
+        <step>S44</step>
+        <step>S45</step>
+      </path>
+    </flow>
+
+    <flow id="F5">
+      <name>Discovery to Opportunity Flow</name>
+      <path>
+        <step>S10 or S27</step>
+        <step>S26</step>
+        <step>S41</step>
+        <step>S39</step>
+        <step>S40</step>
+      </path>
+    </flow>
+  </coreFlows>
+
+  <mvpScreens>
+    <included>
+      <screenId>S1</screenId>
+      <screenId>S2</screenId>
+      <screenId>S3</screenId>
+      <screenId>S4</screenId>
+      <screenId>S5</screenId>
+      <screenId>S6</screenId>
+      <screenId>S10</screenId>
+      <screenId>S11</screenId>
+      <screenId>S12</screenId>
+      <screenId>S14</screenId>
+      <screenId>S15</screenId>
+      <screenId>S16</screenId>
+      <screenId>S19</screenId>
+      <screenId>S20</screenId>
+      <screenId>S21</screenId>
+      <screenId>S22</screenId>
+      <screenId>S23</screenId>
+      <screenId>S24</screenId>
+      <screenId>S25</screenId>
+      <screenId>S26</screenId>
+      <screenId>S27</screenId>
+      <screenId>S34</screenId>
+      <screenId>S35</screenId>
+      <screenId>S42</screenId>
+      <screenId>S43</screenId>
+      <screenId>S44</screenId>
+      <screenId>S47</screenId>
+      <screenId>S48</screenId>
+      <screenId>S49</screenId>
+      <screenId>S50</screenId>
+      <screenId>S51</screenId>
+      <screenId>S52</screenId>
+      <screenId>S55</screenId>
+      <screenId>S56</screenId>
+      <screenId>S57</screenId>
+      <screenId>S63</screenId>
+    </included>
+    <excludedForLater>
+      <screenId>S33</screenId>
+      <screenId>S37</screenId>
+      <screenId>S38</screenId>
+      <screenId>S39</screenId>
+      <screenId>S40</screenId>
+      <screenId>S41</screenId>
+      <screenId>S53</screenId>
+      <screenId>S58</screenId>
+      <screenId>S59</screenId>
+      <screenId>S60</screenId>
+      <screenId>S61</screenId>
+      <screenId>S62</screenId>
+    </excludedForLater>
+  </mvpScreens>
+
+  <notes>
+    <note>
+      The critical retention loop is S10 -> S12 -> S19/S20 -> S23 -> S25 -> S26 -> S27.
+    </note>
+    <note>
+      The critical viral loop is S10 -> S14 -> S15 -> S26 -> share externally -> return.
+    </note>
+    <note>
+      The critical monetization loop is S47 -> S48 -> S49 -> S53.
+    </note>
+  </notes>
+</screenMap>

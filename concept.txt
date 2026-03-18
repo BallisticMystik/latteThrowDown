@@ -1,0 +1,297 @@
+1. Core Concept
+
+Position it as:
+
+"A global stage for baristas—ranked, visible, and verified."
+
+Not "another competition."
+It's where baristas build reputation and get discovered.
+
+2. Product Architecture (What actually matters)
+A. Contest Engine (the backbone)
+
+Types of contests:
+
+Latte art throwdowns
+
+Espresso dial-in challenges
+
+Signature drink builds
+
+Speed rounds (workflow + consistency)
+
+Each contest:
+
+Has a defined ruleset
+
+Has a submission window
+
+Produces a ranked outcome
+
+Submission format:
+
+Short video (15–45 sec)
+
+Required angles (standardization matters)
+
+Optional data overlay (grind size, yield, time)
+
+B. Scoring System (this is where you differentiate)
+Hybrid scoring:
+
+Peer scoring (baristas)
+
+Public scoring (audience)
+
+Verified judges (top tier)
+
+Weight example:
+
+50% peer
+
+30% judges
+
+20% audience
+
+Key:
+
+Every score is visible + auditable
+No black box judging.
+
+C. Reputation Layer (this is the real asset)
+
+Each barista gets:
+
+Skill ratings (like ELO)
+
+Category rankings:
+
+Latte Art
+
+Espresso
+
+Creativity
+
+Consistency score
+
+Verified badges
+
+This becomes:
+
+A portable resume for baristas
+
+D. Feed / Content Layer
+
+This is what drives growth.
+
+Think:
+
+TikTok meets competition brackets
+
+Features:
+
+Scrollable contest entries
+
+Side-by-side battle voting
+
+"Judge breakdown" overlays
+
+Trending baristas
+
+You're not just hosting contests—you're turning them into content loops.
+
+3. Contest Formats (you need repeatable mechanics)
+1. Head-to-Head Battles
+
+Bracket style
+
+Community votes advance winners
+
+Fast, addictive
+
+2. Open Submission Challenges
+
+"Best Rosetta this week"
+
+Global leaderboard
+
+3. Sponsored Drops
+
+Roaster or brand sets challenge
+
+Prize pool + exposure
+
+4. Live Event Sync
+
+Physical throwdown → mirrored in app
+
+Audience votes in real time
+
+4. Incentives (why baristas care)
+
+If you don't nail this, it dies.
+
+What they actually want:
+
+Visibility
+
+Credibility
+
+Opportunity
+
+So give them:
+
+Profile exposure (follower growth)
+
+Verified ranking (not subjective hype)
+
+Direct connections to:
+
+Cafes hiring
+
+Roasters sponsoring
+
+Event organizers
+
+Optional but powerful:
+
+Prize pools (cash, gear)
+
+Brand deals for top performers
+
+5. Anti-BS Mechanisms (critical for trust)
+
+You must prevent:
+
+Popularity contests
+
+Fake votes
+
+Clique judging
+
+Solutions:
+
+Weighted scoring (not pure votes)
+
+Judge reputation scores
+
+Vote anomaly detection
+
+Blind judging modes (no names shown)
+
+6. UX Flow (keep it tight)
+
+Open app
+
+See live contests
+
+Tap → watch entries
+
+Vote (fast, intuitive)
+
+Follow baristas
+
+Submit your own entry
+
+No friction. This is content-first.
+
+7. Go-To-Market (how you actually launch)
+Phase 1 – Seed talent
+
+Recruit 20-50 strong baristas
+
+Give them:
+
+Early badges
+
+Guaranteed exposure
+
+Phase 2 – Creator push
+
+Partner with coffee influencers
+
+Run first viral contest:
+
+"Global Latte Art Battle Week 1"
+
+Phase 3 – Local chapters
+
+Tie into real cafes
+
+Let shops host "official rounds"
+
+Phase 4 – Brand integration
+
+Espresso machine companies
+
+Roasters
+
+Milk brands
+
+They sponsor contests → you monetize
+
+8. Monetization (don't overcomplicate early)
+
+Start with:
+
+Sponsored contests
+
+Featured placements
+
+Brand partnerships
+
+Later:
+
+Premium profiles
+
+Advanced analytics for baristas
+
+Hiring marketplace
+
+9. Branding Position
+
+You are NOT:
+
+Formal
+
+Academic
+
+Gatekept
+
+You ARE:
+
+Competitive, visible, merit-based, transparent
+
+Tone:
+
+Clean but energetic
+
+Skilled, not pretentious
+
+10. The Strategic Endgame
+
+If this works, you get:
+
+The largest dataset of barista performance
+
+A global ranking system
+
+Cultural ownership of competitions
+
+From there you can expand into:
+
+Certification (based on real performance, not classes)
+
+Equipment standards (data-backed)
+
+Coffee scoring (tie back to your earlier idea)
+
+Bottom line
+
+Start with:
+
+"Give baristas a stage"
+
+But architect it as:
+
+"A reputation system disguised as a competition app"

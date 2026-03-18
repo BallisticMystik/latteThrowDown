@@ -1,0 +1,11 @@
+# Nixpacks config for Barista Spotlight (monorepo: root + client/)
+# Root has Hono server; client/ has React app - both need deps installed
+
+[phases.setup]
+nixPkgs = ["nodejs_18", "bun"]
+
+[phases.install]
+cmds = ["bun install", "cd client && bun install"]
+
+[phases.build]
+cmds = ["bun run build"]

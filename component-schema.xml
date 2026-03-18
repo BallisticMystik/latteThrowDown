@@ -1,0 +1,1431 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<componentSchema version="1.0">
+  <meta>
+    <productName>Barista Spotlight</productName>
+    <documentType>Screen-by-Screen Component Schema</documentType>
+    <purpose>
+      Define each core screen at implementation level: layout zones, components, fields,
+      actions, validation, events, and API/data bindings.
+    </purpose>
+    <scope>MVP-first with extension hooks</scope>
+  </meta>
+
+  <conventions>
+    <layoutZones>
+      <zone>topBar</zone>
+      <zone>header</zone>
+      <zone>body</zone>
+      <zone>stickyFooter</zone>
+      <zone>modal</zone>
+      <zone>bottomSheet</zone>
+      <zone>emptyState</zone>
+      <zone>errorState</zone>
+    </layoutZones>
+    <componentTypes>
+      <type>text</type>
+      <type>button</type>
+      <type>input</type>
+      <type>textarea</type>
+      <type>select</type>
+      <type>multiSelect</type>
+      <type>toggle</type>
+      <type>tabBar</type>
+      <type>card</type>
+      <type>list</type>
+      <type>media</type>
+      <type>badge</type>
+      <type>stat</type>
+      <type>progress</type>
+      <type>alert</type>
+      <type>sheet</type>
+      <type>modal</type>
+      <type>chip</type>
+      <type>carousel</type>
+    </componentTypes>
+    <apiMethodLegend>
+      <method>GET</method>
+      <method>POST</method>
+      <method>PATCH</method>
+      <method>DELETE</method>
+    </apiMethodLegend>
+  </conventions>
+
+  <screens>
+
+    <screen id="S2" name="Welcome / Entry">
+      <layout>
+        <topBar>
+          <component id="S2-C1" type="text" name="BrandMark" />
+        </topBar>
+        <header>
+          <component id="S2-C2" type="text" name="HeroHeadline" />
+          <component id="S2-C3" type="text" name="HeroSubcopy" />
+        </header>
+        <body>
+          <component id="S2-C4" type="button" name="SignUpButton" />
+          <component id="S2-C5" type="button" name="LoginButton" />
+          <component id="S2-C6" type="button" name="BrowseGuestButton" />
+          <component id="S2-C7" type="card" name="ValueTeaserCards" />
+        </body>
+      </layout>
+      <components>
+        <component id="S2-C2">
+          <props>
+            <prop name="text">A global stage for baristas</prop>
+          </props>
+        </component>
+        <component id="S2-C4">
+          <props>
+            <prop name="label">Create account</prop>
+            <prop name="variant">primary</prop>
+          </props>
+          <actions>
+            <action>navigate:S3</action>
+          </actions>
+        </component>
+        <component id="S2-C5">
+          <props>
+            <prop name="label">Log in</prop>
+            <prop name="variant">secondary</prop>
+          </props>
+          <actions>
+            <action>navigate:S4</action>
+          </actions>
+        </component>
+        <component id="S2-C6">
+          <props>
+            <prop name="label">Browse as guest</prop>
+            <prop name="variant">ghost</prop>
+          </props>
+          <actions>
+            <action>setSessionMode:guest</action>
+            <action>navigate:S10</action>
+          </actions>
+        </component>
+      </components>
+    </screen>
+
+    <screen id="S3" name="Create Account">
+      <layout>
+        <topBar>
+          <component id="S3-C1" type="button" name="BackButton" />
+          <component id="S3-C2" type="text" name="ScreenTitle" />
+        </topBar>
+        <body>
+          <component id="S3-C3" type="input" name="EmailInput" />
+          <component id="S3-C4" type="input" name="PasswordInput" />
+          <component id="S3-C5" type="toggle" name="TermsCheckbox" />
+          <component id="S3-C6" type="button" name="CreateAccountButton" />
+          <component id="S3-C7" type="button" name="GoogleAuthButton" />
+          <component id="S3-C8" type="alert" name="InlineError" />
+        </body>
+      </layout>
+      <fields>
+        <field name="email" componentId="S3-C3" type="email" required="true">
+          <validation>
+            <rule>must be valid email format</rule>
+            <rule>max length 254</rule>
+          </validation>
+        </field>
+        <field name="password" componentId="S3-C4" type="password" required="true">
+          <validation>
+            <rule>min length 8</rule>
+            <rule>must contain at least 1 number or symbol</rule>
+          </validation>
+        </field>
+        <field name="acceptedTerms" componentId="S3-C5" type="boolean" required="true" />
+      </fields>
+      <actions>
+        <action id="S3-A1" trigger="tap:S3-C6">
+          <behavior>submitForm</behavior>
+          <apiBinding method="POST" endpoint="/auth/register">
+            <requestBody>
+              <param>email</param>
+              <param>password</param>
+              <param>acceptedTerms</param>
+            </requestBody>
+            <success>
+              <event>auth.register.success</event>
+              <navigate>S5</navigate>
+            </success>
+            <error>
+              <event>auth.register.failed</event>
+              <bindErrorTo>S3-C8</bindErrorTo>
+            </error>
+          </apiBinding>
+        </action>
+      </actions>
+    </screen>
+
+    <screen id="S4" name="Log In">
+      <layout>
+        <topBar>
+          <component id="S4-C1" type="button" name="BackButton" />
+          <component id="S4-C2" type="text" name="ScreenTitle" />
+        </topBar>
+        <body>
+          <component id="S4-C3" type="input" name="EmailOrUsernameInput" />
+          <component id="S4-C4" type="input" name="PasswordInput" />
+          <component id="S4-C5" type="button" name="ForgotPasswordButton" />
+          <component id="S4-C6" type="button" name="LoginButton" />
+          <component id="S4-C7" type="alert" name="InlineError" />
+        </body>
+      </layout>
+      <actions>
+        <action id="S4-A1" trigger="tap:S4-C6">
+          <apiBinding method="POST" endpoint="/auth/login">
+            <requestBody>
+              <param>identifier</param>
+              <param>password</param>
+            </requestBody>
+            <success>
+              <event>auth.login.success</event>
+              <navigate>S10</navigate>
+            </success>
+            <error>
+              <bindErrorTo>S4-C7</bindErrorTo>
+            </error>
+          </apiBinding>
+        </action>
+      </actions>
+    </screen>
+
+    <screen id="S5" name="Role Selection">
+      <layout>
+        <topBar>
+          <component id="S5-C1" type="text" name="ScreenTitle" />
+        </topBar>
+        <body>
+          <component id="S5-C2" type="card" name="BaristaRoleCard" />
+          <component id="S5-C3" type="card" name="JudgeRoleCard" />
+          <component id="S5-C4" type="card" name="HostRoleCard" />
+          <component id="S5-C5" type="card" name="SponsorRoleCard" />
+          <component id="S5-C6" type="card" name="AudienceRoleCard" />
+        </body>
+      </layout>
+      <actions>
+        <action trigger="tap:S5-C2">
+          <apiBinding method="PATCH" endpoint="/users/me/role">
+            <requestBody>
+              <param name="role">barista</param>
+            </requestBody>
+            <success>
+              <navigate>S6</navigate>
+            </success>
+          </apiBinding>
+        </action>
+        <action trigger="tap:S5-C3">
+          <apiBinding method="PATCH" endpoint="/users/me/role">
+            <requestBody>
+              <param name="role">judge</param>
+            </requestBody>
+            <success>
+              <navigate>S7</navigate>
+            </success>
+          </apiBinding>
+        </action>
+        <action trigger="tap:S5-C4">
+          <apiBinding method="PATCH" endpoint="/users/me/role">
+            <requestBody>
+              <param name="role">host</param>
+            </requestBody>
+            <success>
+              <navigate>S8</navigate>
+            </success>
+          </apiBinding>
+        </action>
+      </actions>
+    </screen>
+
+    <screen id="S6" name="Barista Onboarding">
+      <layout>
+        <topBar>
+          <component id="S6-C1" type="progress" name="OnboardingProgress" />
+        </topBar>
+        <body>
+          <component id="S6-C2" type="input" name="DisplayNameInput" />
+          <component id="S6-C3" type="input" name="LocationInput" />
+          <component id="S6-C4" type="input" name="CafeAffiliationInput" />
+          <component id="S6-C5" type="multiSelect" name="SkillCategoriesSelect" />
+          <component id="S6-C6" type="textarea" name="BioInput" />
+          <component id="S6-C7" type="button" name="UploadProfilePhotoButton" />
+        </body>
+        <stickyFooter>
+          <component id="S6-C8" type="button" name="CompleteOnboardingButton" />
+        </stickyFooter>
+      </layout>
+      <fields>
+        <field name="displayName" required="true">
+          <validation>
+            <rule>min 2 chars</rule>
+            <rule>max 50 chars</rule>
+          </validation>
+        </field>
+        <field name="location" required="false" />
+        <field name="cafeAffiliation" required="false" />
+        <field name="skills" required="true">
+          <validation>
+            <rule>at least 1 selected</rule>
+          </validation>
+        </field>
+        <field name="bio" required="false">
+          <validation>
+            <rule>max 300 chars</rule>
+          </validation>
+        </field>
+      </fields>
+      <actions>
+        <action trigger="tap:S6-C8">
+          <apiBinding method="POST" endpoint="/profiles/barista">
+            <requestBody>
+              <param>displayName</param>
+              <param>location</param>
+              <param>cafeAffiliation</param>
+              <param>skills</param>
+              <param>bio</param>
+              <param>profilePhotoAssetId</param>
+            </requestBody>
+            <success>
+              <navigate>S10</navigate>
+            </success>
+          </apiBinding>
+        </action>
+      </actions>
+    </screen>
+
+    <screen id="S10" name="Home Feed">
+      <dataSources>
+        <source id="S10-D1" method="GET" endpoint="/feed/home" />
+        <source id="S10-D2" method="GET" endpoint="/contests/featured" />
+        <source id="S10-D3" method="GET" endpoint="/battles/live" />
+      </dataSources>
+      <layout>
+        <topBar>
+          <component id="S10-C1" type="text" name="BrandWordmark" />
+          <component id="S10-C2" type="button" name="SearchButton" />
+          <component id="S10-C3" type="button" name="NotificationsButton" />
+        </topBar>
+        <body>
+          <component id="S10-C4" type="carousel" name="FeaturedContestCarousel" />
+          <component id="S10-C5" type="list" name="LiveBattlesStrip" />
+          <component id="S10-C6" type="tabBar" name="FeedModeTabs" />
+          <component id="S10-C7" type="list" name="TrendingFeedList" />
+          <component id="S10-C8" type="card" name="EditorialSpotlightCard" />
+        </body>
+      </layout>
+      <bindings>
+        <binding componentId="S10-C4" sourceId="S10-D2" path="items" />
+        <binding componentId="S10-C5" sourceId="S10-D3" path="items" />
+        <binding componentId="S10-C7" sourceId="S10-D1" path="feedItems" />
+      </bindings>
+      <actions>
+        <action trigger="tap:S10-C2">
+          <navigate>S17</navigate>
+        </action>
+        <action trigger="tap:S10-C3">
+          <navigate>S18</navigate>
+        </action>
+        <action trigger="tap:item(S10-C4)">
+          <navigate>S12</navigate>
+          <routeParam name="contestId" source="item.id" />
+        </action>
+        <action trigger="tap:item(S10-C5)">
+          <navigate>S14</navigate>
+          <routeParam name="battleId" source="item.id" />
+        </action>
+        <action trigger="tap:item(S10-C7)">
+          <conditional>
+            <if>item.type == contest</if>
+            <then navigate="S12" />
+            <if>item.type == submission</if>
+            <then navigate="S15" />
+            <if>item.type == profile</if>
+            <then navigate="S26" />
+          </conditional>
+        </action>
+      </actions>
+      <states>
+        <emptyState>
+          <title>No activity yet</title>
+          <message>Follow baristas or explore contests to build your feed.</message>
+        </emptyState>
+        <errorState>
+          <message>Could not load feed.</message>
+          <retryAction>reload:S10-D1,S10-D2,S10-D3</retryAction>
+        </errorState>
+      </states>
+    </screen>
+
+    <screen id="S11" name="Contest Index">
+      <dataSources>
+        <source id="S11-D1" method="GET" endpoint="/contests" />
+      </dataSources>
+      <layout>
+        <topBar>
+          <component id="S11-C1" type="text" name="ScreenTitle" />
+          <component id="S11-C2" type="button" name="FilterButton" />
+        </topBar>
+        <body>
+          <component id="S11-C3" type="tabBar" name="ContestStatusTabs" />
+          <component id="S11-C4" type="list" name="ContestCardList" />
+        </body>
+      </layout>
+      <queryParams>
+        <param name="status" sourceComponentId="S11-C3" />
+        <param name="category" source="filterSheet.category" />
+        <param name="region" source="filterSheet.region" />
+      </queryParams>
+      <actions>
+        <action trigger="tap:S11-C2">
+          <openBottomSheet>S54</openBottomSheet>
+        </action>
+        <action trigger="tap:item(S11-C4)">
+          <navigate>S12</navigate>
+          <routeParam name="contestId" source="item.id" />
+        </action>
+      </actions>
+    </screen>
+
+    <screen id="S12" name="Contest Detail">
+      <dataSources>
+        <source id="S12-D1" method="GET" endpoint="/contests/{contestId}" />
+        <source id="S12-D2" method="GET" endpoint="/contests/{contestId}/entries/preview" />
+      </dataSources>
+      <layout>
+        <topBar>
+          <component id="S12-C1" type="button" name="BackButton" />
+          <component id="S12-C2" type="button" name="ShareButton" />
+        </topBar>
+        <header>
+          <component id="S12-C3" type="card" name="ContestHeroCard" />
+        </header>
+        <body>
+          <component id="S12-C4" type="card" name="TimelineCard" />
+          <component id="S12-C5" type="card" name="ScoringSummaryCard" />
+          <component id="S12-C6" type="card" name="PrizeCard" />
+          <component id="S12-C7" type="list" name="HostAndSponsorCards" />
+          <component id="S12-C8" type="list" name="EntryPreviewList" />
+        </body>
+        <stickyFooter>
+          <component id="S12-C9" type="button" name="EnterContestButton" />
+        </stickyFooter>
+      </layout>
+      <actions>
+        <action trigger="tap:S12-C5">
+          <navigate>S13</navigate>
+        </action>
+        <action trigger="tap:S12-C9">
+          <conditional>
+            <if>user.role == guest</if>
+            <then navigate="S3" />
+            <if>contest.isEligible == true</if>
+            <then navigate="S19" />
+            <else>
+              <showMessage>You are not eligible for this contest.</showMessage>
+            </else>
+          </conditional>
+        </action>
+      </actions>
+    </screen>
+
+    <screen id="S14" name="Battle Viewer">
+      <dataSources>
+        <source id="S14-D1" method="GET" endpoint="/battles/{battleId}" />
+      </dataSources>
+      <layout>
+        <topBar>
+          <component id="S14-C1" type="text" name="BattleHeader" />
+          <component id="S14-C2" type="progress" name="BattleProgress" />
+        </topBar>
+        <body>
+          <component id="S14-C3" type="media" name="LeftEntryMedia" />
+          <component id="S14-C4" type="media" name="RightEntryMedia" />
+        </body>
+        <stickyFooter>
+          <component id="S14-C5" type="button" name="VoteLeftButton" />
+          <component id="S14-C6" type="button" name="SkipButton" />
+          <component id="S14-C7" type="button" name="VoteRightButton" />
+        </stickyFooter>
+      </layout>
+      <actions>
+        <action trigger="tap:S14-C5">
+          <apiBinding method="POST" endpoint="/battles/{battleId}/vote">
+            <requestBody>
+              <param name="selection">left</param>
+            </requestBody>
+            <success>
+              <event>battle.vote.success</event>
+              <navigate>S16</navigate>
+            </success>
+          </apiBinding>
+        </action>
+        <action trigger="tap:S14-C7">
+          <apiBinding method="POST" endpoint="/battles/{battleId}/vote">
+            <requestBody>
+              <param name="selection">right</param>
+            </requestBody>
+            <success>
+              <event>battle.vote.success</event>
+              <navigate>S16</navigate>
+            </success>
+          </apiBinding>
+        </action>
+        <action trigger="tap:S14-C3">
+          <navigate>S15</navigate>
+          <routeParam name="submissionId" source="leftSubmission.id" />
+        </action>
+        <action trigger="tap:S14-C4">
+          <navigate>S15</navigate>
+          <routeParam name="submissionId" source="rightSubmission.id" />
+        </action>
+      </actions>
+    </screen>
+
+    <screen id="S15" name="Submission Detail">
+      <dataSources>
+        <source id="S15-D1" method="GET" endpoint="/submissions/{submissionId}" />
+      </dataSources>
+      <layout>
+        <topBar>
+          <component id="S15-C1" type="button" name="BackButton" />
+          <component id="S15-C2" type="button" name="ShareButton" />
+          <component id="S15-C3" type="button" name="ReportButton" />
+        </topBar>
+        <header>
+          <component id="S15-C4" type="media" name="SubmissionMediaPlayer" />
+        </header>
+        <body>
+          <component id="S15-C5" type="card" name="BaristaSummaryCard" />
+          <component id="S15-C6" type="stat" name="ScoreSummary" />
+          <component id="S15-C7" type="card" name="MetadataCard" />
+          <component id="S15-C8" type="list" name="JudgeCommentsList" />
+        </body>
+      </layout>
+      <actions>
+        <action trigger="tap:S15-C5">
+          <navigate>S26</navigate>
+          <routeParam name="profileId" source="submission.profileId" />
+        </action>
+        <action trigger="tap:S15-C3">
+          <apiBinding method="POST" endpoint="/reports">
+            <requestBody>
+              <param name="targetType">submission</param>
+              <param name="targetId" source="submissionId" />
+            </requestBody>
+          </apiBinding>
+        </action>
+      </actions>
+    </screen>
+
+    <screen id="S16" name="Contest Results">
+      <dataSources>
+        <source id="S16-D1" method="GET" endpoint="/contests/{contestId}/results" />
+      </dataSources>
+      <layout>
+        <header>
+          <component id="S16-C1" type="card" name="WinnerHeroCard" />
+        </header>
+        <body>
+          <component id="S16-C2" type="list" name="PlacementList" />
+          <component id="S16-C3" type="card" name="ScoreBreakdownCard" />
+          <component id="S16-C4" type="button" name="ShareResultsButton" />
+        </body>
+      </layout>
+      <actions>
+        <action trigger="tap:item(S16-C2)">
+          <navigate>S26</navigate>
+          <routeParam name="profileId" source="item.profileId" />
+        </action>
+      </actions>
+    </screen>
+
+    <screen id="S17" name="Search">
+      <layout>
+        <topBar>
+          <component id="S17-C1" type="input" name="SearchInput" />
+        </topBar>
+        <body>
+          <component id="S17-C2" type="tabBar" name="SearchTypeTabs" />
+          <component id="S17-C3" type="list" name="SearchResultsList" />
+        </body>
+      </layout>
+      <actions>
+        <action trigger="change:S17-C1">
+          <apiBinding method="GET" endpoint="/search">
+            <queryParams>
+              <param name="q" sourceComponentId="S17-C1" />
+              <param name="type" sourceComponentId="S17-C2" />
+            </queryParams>
+            <success>
+              <bindTo>S17-C3</bindTo>
+            </success>
+          </apiBinding>
+        </action>
+      </actions>
+    </screen>
+
+    <screen id="S18" name="Notifications Center">
+      <dataSources>
+        <source id="S18-D1" method="GET" endpoint="/notifications" />
+      </dataSources>
+      <layout>
+        <topBar>
+          <component id="S18-C1" type="text" name="ScreenTitle" />
+          <component id="S18-C2" type="button" name="MarkAllReadButton" />
+        </topBar>
+        <body>
+          <component id="S18-C3" type="list" name="NotificationList" />
+        </body>
+      </layout>
+      <actions>
+        <action trigger="tap:S18-C2">
+          <apiBinding method="POST" endpoint="/notifications/mark-all-read" />
+        </action>
+        <action trigger="tap:item(S18-C3)">
+          <conditional>
+            <if>item.linkType == contest</if>
+            <then navigate="S12" />
+            <if>item.linkType == profile</if>
+            <then navigate="S26" />
+            <if>item.linkType == opportunity</if>
+            <then navigate="S39" />
+          </conditional>
+        </action>
+      </actions>
+    </screen>
+
+    <screen id="S19" name="Create / Submit Entry Hub">
+      <dataSources>
+        <source id="S19-D1" method="GET" endpoint="/contests/eligible" />
+        <source id="S19-D2" method="GET" endpoint="/submissions/drafts" />
+      </dataSources>
+      <layout>
+        <body>
+          <component id="S19-C1" type="list" name="EligibleContestList" />
+          <component id="S19-C2" type="list" name="DraftSubmissionList" />
+        </body>
+      </layout>
+      <actions>
+        <action trigger="tap:item(S19-C1)">
+          <navigate>S20</navigate>
+          <routeParam name="contestId" source="item.id" />
+        </action>
+        <action trigger="tap:item(S19-C2)">
+          <navigate>S23</navigate>
+          <routeParam name="draftId" source="item.id" />
+        </action>
+      </actions>
+    </screen>
+
+    <screen id="S20" name="Submission Setup">
+      <dataSources>
+        <source id="S20-D1" method="GET" endpoint="/contests/{contestId}/submission-requirements" />
+      </dataSources>
+      <layout>
+        <body>
+          <component id="S20-C1" type="card" name="RequirementChecklist" />
+          <component id="S20-C2" type="button" name="RecordInAppButton" />
+          <component id="S20-C3" type="button" name="UploadFromLibraryButton" />
+        </body>
+      </layout>
+      <actions>
+        <action trigger="tap:S20-C2">
+          <navigate>S21</navigate>
+          <routeParam name="contestId" source="contestId" />
+        </action>
+        <action trigger="tap:S20-C3">
+          <navigate>S22</navigate>
+          <routeParam name="contestId" source="contestId" />
+        </action>
+      </actions>
+    </screen>
+
+    <screen id="S21" name="In-App Camera / Recording">
+      <layout>
+        <body>
+          <component id="S21-C1" type="media" name="CameraPreview" />
+          <component id="S21-C2" type="progress" name="DurationMeter" />
+        </body>
+        <stickyFooter>
+          <component id="S21-C3" type="button" name="RecordToggleButton" />
+          <component id="S21-C4" type="button" name="UseClipButton" />
+        </stickyFooter>
+      </layout>
+      <actions>
+        <action trigger="tap:S21-C4">
+          <navigate>S23</navigate>
+          <routeParam name="tempMediaAssetId" source="capturedAsset.id" />
+        </action>
+      </actions>
+    </screen>
+
+    <screen id="S22" name="Media Upload">
+      <layout>
+        <body>
+          <component id="S22-C1" type="button" name="SelectFileButton" />
+          <component id="S22-C2" type="progress" name="UploadProgressBar" />
+          <component id="S22-C3" type="alert" name="UploadErrorAlert" />
+        </body>
+      </layout>
+      <actions>
+        <action trigger="tap:S22-C1">
+          <apiBinding method="POST" endpoint="/media/upload">
+            <requestBody>
+              <param name="file">devicePickerSelection</param>
+            </requestBody>
+            <success>
+              <navigate>S23</navigate>
+              <routeParam name="tempMediaAssetId" source="response.assetId" />
+            </success>
+            <error>
+              <bindErrorTo>S22-C3</bindErrorTo>
+            </error>
+          </apiBinding>
+        </action>
+      </actions>
+    </screen>
+
+    <screen id="S23" name="Submission Review and Metadata">
+      <layout>
+        <header>
+          <component id="S23-C1" type="media" name="ClipPreviewPlayer" />
+        </header>
+        <body>
+          <component id="S23-C2" type="input" name="TitleInput" />
+          <component id="S23-C3" type="textarea" name="CaptionInput" />
+          <component id="S23-C4" type="toggle" name="OriginalityCheckbox" />
+          <component id="S23-C5" type="button" name="SaveDraftButton" />
+        </body>
+        <stickyFooter>
+          <component id="S23-C6" type="button" name="SubmitEntryButton" />
+        </stickyFooter>
+      </layout>
+      <fields>
+        <field name="title" required="false" />
+        <field name="caption" required="false">
+          <validation>
+            <rule>max 500 chars</rule>
+          </validation>
+        </field>
+        <field name="agreedOriginality" required="true" />
+      </fields>
+      <actions>
+        <action trigger="tap:S23-C5">
+          <apiBinding method="POST" endpoint="/submissions/drafts">
+            <requestBody>
+              <param>contestId</param>
+              <param>tempMediaAssetId</param>
+              <param>title</param>
+              <param>caption</param>
+            </requestBody>
+            <success>
+              <navigate>S24</navigate>
+            </success>
+          </apiBinding>
+        </action>
+        <action trigger="tap:S23-C6">
+          <apiBinding method="POST" endpoint="/submissions">
+            <requestBody>
+              <param>contestId</param>
+              <param>mediaAssetId</param>
+              <param>title</param>
+              <param>caption</param>
+              <param>agreedOriginality</param>
+            </requestBody>
+            <success>
+              <navigate>S25</navigate>
+            </success>
+          </apiBinding>
+        </action>
+      </actions>
+    </screen>
+
+    <screen id="S24" name="Submission Drafts">
+      <dataSources>
+        <source id="S24-D1" method="GET" endpoint="/submissions/drafts" />
+      </dataSources>
+      <layout>
+        <body>
+          <component id="S24-C1" type="list" name="DraftList" />
+        </body>
+      </layout>
+      <actions>
+        <action trigger="tap:item(S24-C1)">
+          <navigate>S23</navigate>
+          <routeParam name="draftId" source="item.id" />
+        </action>
+      </actions>
+    </screen>
+
+    <screen id="S25" name="Submission Confirmation / Tracking">
+      <dataSources>
+        <source id="S25-D1" method="GET" endpoint="/submissions/{submissionId}/status" />
+      </dataSources>
+      <layout>
+        <header>
+          <component id="S25-C1" type="card" name="SuccessCard" />
+        </header>
+        <body>
+          <component id="S25-C2" type="progress" name="StatusTracker" />
+          <component id="S25-C3" type="button" name="ShareSubmissionButton" />
+          <component id="S25-C4" type="button" name="GoToContestButton" />
+        </body>
+      </layout>
+      <actions>
+        <action trigger="tap:S25-C4">
+          <navigate>S12</navigate>
+          <routeParam name="contestId" source="status.contestId" />
+        </action>
+      </actions>
+    </screen>
+
+    <screen id="S26" name="Public Barista Profile">
+      <dataSources>
+        <source id="S26-D1" method="GET" endpoint="/profiles/{profileId}" />
+        <source id="S26-D2" method="GET" endpoint="/profiles/{profileId}/entries" />
+      </dataSources>
+      <layout>
+        <header>
+          <component id="S26-C1" type="card" name="ProfileHeaderCard" />
+        </header>
+        <body>
+          <component id="S26-C2" type="stat" name="StatsStrip" />
+          <component id="S26-C3" type="badge" name="RankBadges" />
+          <component id="S26-C4" type="tabBar" name="ProfileTabs" />
+          <component id="S26-C5" type="list" name="ProfileContentList" />
+        </body>
+      </layout>
+      <actions>
+        <action trigger="tap:FollowButton">
+          <apiBinding method="POST" endpoint="/profiles/{profileId}/follow" />
+        </action>
+        <action trigger="tap:OpportunityButton">
+          <navigate>S41</navigate>
+          <routeParam name="recipientProfileId" source="profileId" />
+        </action>
+      </actions>
+    </screen>
+
+    <screen id="S27" name="Leaderboard Home">
+      <dataSources>
+        <source id="S27-D1" method="GET" endpoint="/leaderboards" />
+      </dataSources>
+      <layout>
+        <topBar>
+          <component id="S27-C1" type="button" name="FilterButton" />
+        </topBar>
+        <body>
+          <component id="S27-C2" type="tabBar" name="LeaderboardTabs" />
+          <component id="S27-C3" type="list" name="RankedUserList" />
+        </body>
+      </layout>
+      <queryParams>
+        <param name="view" sourceComponentId="S27-C2" />
+        <param name="region" source="filterSheet.region" />
+        <param name="category" source="filterSheet.category" />
+      </queryParams>
+      <actions>
+        <action trigger="tap:item(S27-C3)">
+          <navigate>S26</navigate>
+          <routeParam name="profileId" source="item.profileId" />
+        </action>
+      </actions>
+    </screen>
+
+    <screen id="S34" name="My Profile Dashboard">
+      <dataSources>
+        <source id="S34-D1" method="GET" endpoint="/profiles/me/dashboard" />
+      </dataSources>
+      <layout>
+        <header>
+          <component id="S34-C1" type="card" name="PrivateProfileHeaderCard" />
+        </header>
+        <body>
+          <component id="S34-C2" type="stat" name="PrivateStatsStrip" />
+          <component id="S34-C3" type="card" name="RankSnapshotCard" />
+          <component id="S34-C4" type="list" name="RecentSubmissionList" />
+          <component id="S34-C5" type="button" name="EditProfileButton" />
+        </body>
+      </layout>
+      <actions>
+        <action trigger="tap:S34-C5">
+          <navigate>S35</navigate>
+        </action>
+      </actions>
+    </screen>
+
+    <screen id="S35" name="Edit Profile">
+      <dataSources>
+        <source id="S35-D1" method="GET" endpoint="/profiles/me" />
+      </dataSources>
+      <layout>
+        <body>
+          <component id="S35-C1" type="input" name="DisplayNameInput" />
+          <component id="S35-C2" type="textarea" name="BioInput" />
+          <component id="S35-C3" type="input" name="LocationInput" />
+          <component id="S35-C4" type="input" name="SocialLinkInput" />
+        </body>
+        <stickyFooter>
+          <component id="S35-C5" type="button" name="SaveButton" />
+        </stickyFooter>
+      </layout>
+      <actions>
+        <action trigger="tap:S35-C5">
+          <apiBinding method="PATCH" endpoint="/profiles/me">
+            <requestBody>
+              <param>displayName</param>
+              <param>bio</param>
+              <param>location</param>
+              <param>socialLinks</param>
+            </requestBody>
+            <success>
+              <navigate>S34</navigate>
+            </success>
+          </apiBinding>
+        </action>
+      </actions>
+    </screen>
+
+    <screen id="S39" name="Opportunity Detail">
+      <dataSources>
+        <source id="S39-D1" method="GET" endpoint="/opportunities/{opportunityId}" />
+      </dataSources>
+      <layout>
+        <header>
+          <component id="S39-C1" type="card" name="SenderCard" />
+        </header>
+        <body>
+          <component id="S39-C2" type="text" name="OpportunityDescription" />
+          <component id="S39-C3" type="card" name="TermsCard" />
+        </body>
+        <stickyFooter>
+          <component id="S39-C4" type="button" name="AcceptButton" />
+          <component id="S39-C5" type="button" name="DeclineButton" />
+        </stickyFooter>
+      </layout>
+      <actions>
+        <action trigger="tap:S39-C4">
+          <apiBinding method="POST" endpoint="/opportunities/{opportunityId}/accept">
+            <success>
+              <navigate>S40</navigate>
+            </success>
+          </apiBinding>
+        </action>
+        <action trigger="tap:S39-C5">
+          <apiBinding method="POST" endpoint="/opportunities/{opportunityId}/decline" />
+        </action>
+      </actions>
+    </screen>
+
+    <screen id="S40" name="Message / Contact Thread">
+      <dataSources>
+        <source id="S40-D1" method="GET" endpoint="/threads/{threadId}" />
+      </dataSources>
+      <layout>
+        <body>
+          <component id="S40-C1" type="list" name="MessageList" />
+        </body>
+        <stickyFooter>
+          <component id="S40-C2" type="textarea" name="MessageComposer" />
+          <component id="S40-C3" type="button" name="SendButton" />
+        </stickyFooter>
+      </layout>
+      <actions>
+        <action trigger="tap:S40-C3">
+          <apiBinding method="POST" endpoint="/threads/{threadId}/messages">
+            <requestBody>
+              <param name="body" sourceComponentId="S40-C2" />
+            </requestBody>
+            <success>
+              <appendTo>S40-C1</appendTo>
+              <clearField>S40-C2</clearField>
+            </success>
+          </apiBinding>
+        </action>
+      </actions>
+    </screen>
+
+    <screen id="S41" name="Create Opportunity Request">
+      <layout>
+        <body>
+          <component id="S41-C1" type="card" name="RecipientSummaryCard" />
+          <component id="S41-C2" type="select" name="OpportunityTypeSelect" />
+          <component id="S41-C3" type="textarea" name="DescriptionInput" />
+          <component id="S41-C4" type="input" name="CompensationInput" />
+        </body>
+        <stickyFooter>
+          <component id="S41-C5" type="button" name="SendRequestButton" />
+        </stickyFooter>
+      </layout>
+      <actions>
+        <action trigger="tap:S41-C5">
+          <apiBinding method="POST" endpoint="/opportunities">
+            <requestBody>
+              <param>recipientProfileId</param>
+              <param>type</param>
+              <param>description</param>
+              <param>compensation</param>
+            </requestBody>
+            <success>
+              <navigate>S39</navigate>
+            </success>
+          </apiBinding>
+        </action>
+      </actions>
+    </screen>
+
+    <screen id="S42" name="Judge Dashboard">
+      <dataSources>
+        <source id="S42-D1" method="GET" endpoint="/judge/dashboard" />
+      </dataSources>
+      <layout>
+        <body>
+          <component id="S42-C1" type="list" name="AssignedContestList" />
+          <component id="S42-C2" type="card" name="PendingReviewsCard" />
+          <component id="S42-C3" type="button" name="GoToScoringQueueButton" />
+        </body>
+      </layout>
+      <actions>
+        <action trigger="tap:S42-C3">
+          <navigate>S43</navigate>
+        </action>
+      </actions>
+    </screen>
+
+    <screen id="S43" name="Judge Scoring Queue">
+      <dataSources>
+        <source id="S43-D1" method="GET" endpoint="/judge/assignments" />
+      </dataSources>
+      <layout>
+        <body>
+          <component id="S43-C1" type="list" name="AssignedSubmissionList" />
+        </body>
+      </layout>
+      <actions>
+        <action trigger="tap:item(S43-C1)">
+          <navigate>S44</navigate>
+          <routeParam name="assignmentId" source="item.id" />
+        </action>
+      </actions>
+    </screen>
+
+    <screen id="S44" name="Judge Scorecard">
+      <dataSources>
+        <source id="S44-D1" method="GET" endpoint="/judge/assignments/{assignmentId}" />
+      </dataSources>
+      <layout>
+        <header>
+          <component id="S44-C1" type="media" name="SubmissionMediaPlayer" />
+        </header>
+        <body>
+          <component id="S44-C2" type="list" name="CriteriaInputList" />
+          <component id="S44-C3" type="textarea" name="JudgeCommentsInput" />
+          <component id="S44-C4" type="toggle" name="ConflictDeclarationToggle" />
+        </body>
+        <stickyFooter>
+          <component id="S44-C5" type="button" name="SavePartialButton" />
+          <component id="S44-C6" type="button" name="SubmitScorecardButton" />
+        </stickyFooter>
+      </layout>
+      <fields>
+        <field name="criteriaScores" required="true" />
+        <field name="comments" required="false" />
+        <field name="conflictDeclared" required="true" />
+      </fields>
+      <actions>
+        <action trigger="tap:S44-C5">
+          <apiBinding method="POST" endpoint="/judge/assignments/{assignmentId}/draft-scorecard">
+            <requestBody>
+              <param>criteriaScores</param>
+              <param>comments</param>
+              <param>conflictDeclared</param>
+            </requestBody>
+          </apiBinding>
+        </action>
+        <action trigger="tap:S44-C6">
+          <apiBinding method="POST" endpoint="/judge/assignments/{assignmentId}/scorecard">
+            <requestBody>
+              <param>criteriaScores</param>
+              <param>comments</param>
+              <param>conflictDeclared</param>
+            </requestBody>
+            <success>
+              <navigate>S45</navigate>
+            </success>
+          </apiBinding>
+        </action>
+      </actions>
+    </screen>
+
+    <screen id="S47" name="Host Dashboard">
+      <dataSources>
+        <source id="S47-D1" method="GET" endpoint="/hosts/me/dashboard" />
+      </dataSources>
+      <layout>
+        <header>
+          <component id="S47-C1" type="card" name="PerformanceSummaryCard" />
+        </header>
+        <body>
+          <component id="S47-C2" type="list" name="UpcomingContestList" />
+          <component id="S47-C3" type="button" name="CreateContestButton" />
+          <component id="S47-C4" type="button" name="ViewAnalyticsButton" />
+        </body>
+      </layout>
+      <actions>
+        <action trigger="tap:S47-C3">
+          <navigate>S48</navigate>
+        </action>
+        <action trigger="tap:S47-C4">
+          <navigate>S53</navigate>
+        </action>
+      </actions>
+    </screen>
+
+    <screen id="S48" name="Contest Creation Wizard">
+      <layout>
+        <topBar>
+          <component id="S48-C1" type="progress" name="WizardProgress" />
+        </topBar>
+        <body>
+          <component id="S48-C2" type="select" name="ContestTemplateSelect" />
+          <component id="S48-C3" type="input" name="ContestNameInput" />
+          <component id="S48-C4" type="textarea" name="ContestDescriptionInput" />
+          <component id="S48-C5" type="input" name="OpenAtInput" />
+          <component id="S48-C6" type="input" name="CloseAtInput" />
+          <component id="S48-C7" type="multiSelect" name="EligibilityRulesSelect" />
+          <component id="S48-C8" type="card" name="ScoringWeightsEditor" />
+          <component id="S48-C9" type="textarea" name="PrizeSummaryInput" />
+        </body>
+        <stickyFooter>
+          <component id="S48-C10" type="button" name="SaveDraftButton" />
+          <component id="S48-C11" type="button" name="PublishContestButton" />
+        </stickyFooter>
+      </layout>
+      <actions>
+        <action trigger="tap:S48-C10">
+          <apiBinding method="POST" endpoint="/contests/drafts">
+            <requestBody>
+              <param>template</param>
+              <param>name</param>
+              <param>description</param>
+              <param>openAt</param>
+              <param>closeAt</param>
+              <param>eligibilityRules</param>
+              <param>scoringWeights</param>
+              <param>prizeSummary</param>
+            </requestBody>
+            <success>
+              <navigate>S49</navigate>
+            </success>
+          </apiBinding>
+        </action>
+        <action trigger="tap:S48-C11">
+          <apiBinding method="POST" endpoint="/contests">
+            <requestBody>
+              <param>template</param>
+              <param>name</param>
+              <param>description</param>
+              <param>openAt</param>
+              <param>closeAt</param>
+              <param>eligibilityRules</param>
+              <param>scoringWeights</param>
+              <param>prizeSummary</param>
+            </requestBody>
+            <success>
+              <navigate>S49</navigate>
+            </success>
+          </apiBinding>
+        </action>
+      </actions>
+    </screen>
+
+    <screen id="S49" name="Contest Management">
+      <dataSources>
+        <source id="S49-D1" method="GET" endpoint="/hosts/contests/{contestId}" />
+      </dataSources>
+      <layout>
+        <header>
+          <component id="S49-C1" type="card" name="ContestStatusCard" />
+        </header>
+        <body>
+          <component id="S49-C2" type="button" name="SubmissionReviewButton" />
+          <component id="S49-C3" type="button" name="AssignJudgesButton" />
+          <component id="S49-C4" type="button" name="PublishResultsButton" />
+        </body>
+      </layout>
+      <actions>
+        <action trigger="tap:S49-C2">
+          <navigate>S50</navigate>
+        </action>
+        <action trigger="tap:S49-C3">
+          <navigate>S51</navigate>
+        </action>
+        <action trigger="tap:S49-C4">
+          <navigate>S52</navigate>
+        </action>
+      </actions>
+    </screen>
+
+    <screen id="S50" name="Submission Review Queue">
+      <dataSources>
+        <source id="S50-D1" method="GET" endpoint="/hosts/contests/{contestId}/submissions/pending" />
+      </dataSources>
+      <layout>
+        <body>
+          <component id="S50-C1" type="list" name="PendingSubmissionList" />
+        </body>
+      </layout>
+      <actions>
+        <action trigger="tap:ApproveButton">
+          <apiBinding method="POST" endpoint="/submissions/{submissionId}/approve" />
+        </action>
+        <action trigger="tap:RejectButton">
+          <apiBinding method="POST" endpoint="/submissions/{submissionId}/reject">
+            <requestBody>
+              <param name="reason" source="moderationReason" />
+            </requestBody>
+          </apiBinding>
+        </action>
+      </actions>
+    </screen>
+
+    <screen id="S51" name="Judge Assignment">
+      <dataSources>
+        <source id="S51-D1" method="GET" endpoint="/judges" />
+      </dataSources>
+      <layout>
+        <body>
+          <component id="S51-C1" type="list" name="JudgeDirectoryList" />
+          <component id="S51-C2" type="button" name="ConfirmAssignmentsButton" />
+        </body>
+      </layout>
+      <actions>
+        <action trigger="tap:AssignJudge">
+          <apiBinding method="POST" endpoint="/contests/{contestId}/assign-judge">
+            <requestBody>
+              <param name="judgeId" source="selectedJudge.id" />
+            </requestBody>
+          </apiBinding>
+        </action>
+      </actions>
+    </screen>
+
+    <screen id="S52" name="Result Publication">
+      <dataSources>
+        <source id="S52-D1" method="GET" endpoint="/hosts/contests/{contestId}/result-preview" />
+      </dataSources>
+      <layout>
+        <body>
+          <component id="S52-C1" type="card" name="PrePublishChecklistCard" />
+          <component id="S52-C2" type="list" name="PlacementPreviewList" />
+          <component id="S52-C3" type="textarea" name="AnnouncementCopyInput" />
+        </body>
+        <stickyFooter>
+          <component id="S52-C4" type="button" name="PublishNowButton" />
+        </stickyFooter>
+      </layout>
+      <actions>
+        <action trigger="tap:S52-C4">
+          <apiBinding method="POST" endpoint="/contests/{contestId}/publish-results">
+            <requestBody>
+              <param name="announcementCopy" sourceComponentId="S52-C3" />
+            </requestBody>
+            <success>
+              <navigate>S16</navigate>
+            </success>
+          </apiBinding>
+        </action>
+      </actions>
+    </screen>
+
+    <screen id="S53" name="Host Analytics">
+      <dataSources>
+        <source id="S53-D1" method="GET" endpoint="/hosts/me/analytics" />
+      </dataSources>
+      <layout>
+        <body>
+          <component id="S53-C1" type="card" name="ParticipationMetricsCard" />
+          <component id="S53-C2" type="card" name="EngagementMetricsCard" />
+          <component id="S53-C3" type="button" name="ExportReportButton" />
+        </body>
+      </layout>
+      <actions>
+        <action trigger="tap:S53-C3">
+          <apiBinding method="GET" endpoint="/hosts/me/analytics/export" />
+        </action>
+      </actions>
+    </screen>
+
+    <screen id="S54" name="Filters / Sort Modal">
+      <layout>
+        <body>
+          <component id="S54-C1" type="select" name="RegionSelect" />
+          <component id="S54-C2" type="multiSelect" name="CategorySelect" />
+          <component id="S54-C3" type="select" name="SortSelect" />
+        </body>
+        <stickyFooter>
+          <component id="S54-C4" type="button" name="ResetButton" />
+          <component id="S54-C5" type="button" name="ApplyButton" />
+        </stickyFooter>
+      </layout>
+      <actions>
+        <action trigger="tap:S54-C4">
+          <event>filters.reset</event>
+        </action>
+        <action trigger="tap:S54-C5">
+          <event>filters.apply</event>
+          <closeModal>true</closeModal>
+        </action>
+      </actions>
+    </screen>
+
+    <screen id="S55" name="Settings">
+      <layout>
+        <body>
+          <component id="S55-C1" type="list" name="SettingsSectionList" />
+        </body>
+      </layout>
+      <actions>
+        <action trigger="tap:NotificationPreferencesItem">
+          <navigate>S56</navigate>
+        </action>
+        <action trigger="tap:PrivacyVisibilityItem">
+          <navigate>S57</navigate>
+        </action>
+        <action trigger="tap:VerificationCenterItem">
+          <navigate>S58</navigate>
+        </action>
+      </actions>
+    </screen>
+
+    <screen id="S56" name="Notification Preferences">
+      <layout>
+        <body>
+          <component id="S56-C1" type="toggle" name="ContestAlertsToggle" />
+          <component id="S56-C2" type="toggle" name="FollowerAlertsToggle" />
+          <component id="S56-C3" type="toggle" name="OpportunityAlertsToggle" />
+          <component id="S56-C4" type="toggle" name="EmailDigestToggle" />
+        </body>
+        <stickyFooter>
+          <component id="S56-C5" type="button" name="SaveButton" />
+        </stickyFooter>
+      </layout>
+      <actions>
+        <action trigger="tap:S56-C5">
+          <apiBinding method="PATCH" endpoint="/users/me/notification-preferences">
+            <requestBody>
+              <param>contestAlerts</param>
+              <param>followerAlerts</param>
+              <param>opportunityAlerts</param>
+              <param>emailDigest</param>
+            </requestBody>
+          </apiBinding>
+        </action>
+      </actions>
+    </screen>
+
+    <screen id="S57" name="Privacy and Visibility">
+      <layout>
+        <body>
+          <component id="S57-C1" type="toggle" name="ProfileVisibleToggle" />
+          <component id="S57-C2" type="toggle" name="SearchDiscoverableToggle" />
+          <component id="S57-C3" type="toggle" name="AllowOpportunityRequestsToggle" />
+        </body>
+        <stickyFooter>
+          <component id="S57-C4" type="button" name="SaveButton" />
+        </stickyFooter>
+      </layout>
+      <actions>
+        <action trigger="tap:S57-C4">
+          <apiBinding method="PATCH" endpoint="/users/me/privacy-settings">
+            <requestBody>
+              <param>profileVisible</param>
+              <param>searchDiscoverable</param>
+              <param>allowOpportunityRequests</param>
+            </requestBody>
+          </apiBinding>
+        </action>
+      </actions>
+    </screen>
+
+    <screen id="S58" name="Verification Center">
+      <dataSources>
+        <source id="S58-D1" method="GET" endpoint="/verification/me" />
+      </dataSources>
+      <layout>
+        <body>
+          <component id="S58-C1" type="card" name="VerificationStatusCard" />
+          <component id="S58-C2" type="button" name="UploadDocumentButton" />
+          <component id="S58-C3" type="list" name="SubmittedItemsList" />
+        </body>
+      </layout>
+      <actions>
+        <action trigger="tap:S58-C2">
+          <apiBinding method="POST" endpoint="/verification/documents">
+            <requestBody>
+              <param name="file">devicePickerSelection</param>
+            </requestBody>
+          </apiBinding>
+        </action>
+      </actions>
+    </screen>
+
+  </screens>
+
+  <sharedComponents>
+    <component name="ContestCard">
+      <props>
+        <prop>contestId</prop>
+        <prop>title</prop>
+        <prop>hostName</prop>
+        <prop>status</prop>
+        <prop>entryCount</prop>
+        <prop>heroImageUrl</prop>
+      </props>
+      <events>
+        <event>onOpen</event>
+        <event>onFollow</event>
+      </events>
+    </component>
+    <component name="ProfileHeaderCard">
+      <props>
+        <prop>profileId</prop>
+        <prop>displayName</prop>
+        <prop>photoUrl</prop>
+        <prop>bio</prop>
+        <prop>rankSummary</prop>
+      </props>
+      <events>
+        <event>onFollow</event>
+        <event>onShare</event>
+        <event>onOpportunity</event>
+      </events>
+    </component>
+    <component name="ScoreBreakdownCard">
+      <props>
+        <prop>judgeWeight</prop>
+        <prop>peerWeight</prop>
+        <prop>audienceWeight</prop>
+        <prop>finalScore</prop>
+      </props>
+    </component>
+  </sharedComponents>
+
+  <globalEvents>
+    <event name="auth.login.success" />
+    <event name="auth.register.success" />
+    <event name="battle.vote.success" />
+    <event name="submission.created" />
+    <event name="submission.approved" />
+    <event name="results.published" />
+    <event name="filters.apply" />
+    <event name="filters.reset" />
+  </globalEvents>
+
+  <recommendedNextArtifacts>
+    <artifact>Design-system token XML</artifact>
+    <artifact>API contract schema JSON</artifact>
+    <artifact>User stories with acceptance criteria</artifact>
+    <artifact>Database ERD for contests, scoring, rankings, and opportunities</artifact>
+  </recommendedNextArtifacts>
+</componentSchema>

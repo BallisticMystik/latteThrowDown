@@ -1,0 +1,43 @@
+{
+  "$schema": "sidechain-prompt-chain-v1",
+  "taskId": "PIVOT-REACT",
+  "name": "Pivot to Vite + React frontend",
+  "subtasks": [
+    {
+      "id": "C1",
+      "name": "Scaffold Vite + React + TypeScript in client/",
+      "complexity": 2,
+      "dependencies": [],
+      "parallelizable": true
+    },
+    {
+      "id": "C2",
+      "name": "Install + configure Tailwind + DaisyUI + shadcn/ui",
+      "complexity": 2,
+      "dependencies": ["C1"]
+    },
+    {
+      "id": "C3",
+      "name": "Reconfigure Hono as API-only + SPA serving + dev proxy",
+      "complexity": 2,
+      "dependencies": [],
+      "parallelizable": true
+    },
+    {
+      "id": "C4",
+      "name": "Shared types package + React Router shell + layout",
+      "complexity": 2,
+      "dependencies": ["C1", "C2"]
+    },
+    {
+      "id": "C5",
+      "name": "Wire it all: dev proxy, build output, verify full stack",
+      "complexity": 3,
+      "dependencies": ["C3", "C4"]
+    }
+  ],
+  "execution": {
+    "parallelizable": ["C1", "C3"],
+    "order": ["C1+C3", "C2", "C4", "C5"]
+  }
+}

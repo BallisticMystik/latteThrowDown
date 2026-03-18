@@ -1,0 +1,199 @@
+{
+  "$schema": "sidechain-prompt-chain-v1",
+  "taskId": "PHASE1-SCAFFOLD",
+  "name": "Barista Spotlight — Project Scaffold",
+  "description": "Initialize Bun+Hono project with full domain-driven directory structure, SQLite, WebSocket, SSR, PWA shell",
+  "complexity": 3,
+  "tdd": true,
+  "analysis": {
+    "components": ["SharedLayout", "MobileNav", "PWA Shell"],
+    "hooks": [],
+    "queries": [],
+    "database": ["_migrations", "users", "sessions", "profiles"],
+    "ui": ["Pico CSS integration", "Mobile-first layout", "Service worker"]
+  },
+  "subtasks": [
+    {
+      "id": "A1",
+      "name": "Project config files (package.json, tsconfig, bunfig)",
+      "complexity": 1,
+      "agentType": "general-purpose",
+      "instructions": {
+        "layer1": "Create package.json with Hono+Bun deps, tsconfig.json for Bun, and bunfig.toml. Scripts: dev, build, migrate, seed. Deps: hono. No other runtime deps — bun:sqlite is built-in."
+      },
+      "files": {
+        "create": ["package.json", "tsconfig.json", "bunfig.toml"],
+        "modify": []
+      },
+      "dependencies": [],
+      "outputs": ["package.json", "tsconfig.json", "bunfig.toml"]
+    },
+    {
+      "id": "A2",
+      "name": "SQLite database layer + migration runner",
+      "complexity": 2,
+      "agentType": "general-purpose",
+      "instructions": {
+        "layer1": "Create src/db/database.ts that initializes bun:sqlite with WAL mode and foreign keys. Create a migration runner that reads numbered .sql files from src/db/migrations/ and tracks applied migrations in a _migrations table. Create 001_init.sql with users, sessions, and profiles tables.",
+        "layer2": "Use bun:sqlite Database class. WAL via PRAGMA journal_mode=WAL. Migration runner: read all .sql files sorted by name, check _migrations table, run unapplied ones in a transaction. Export a singleton db instance and a runMigrations() function."
+      },
+      "files": {
+        "create": ["src/db/database.ts", "src/db/migrations/001_init.sql"],
+        "modify": []
+      },
+      "dependencies": ["A1"],
+      "outputs": ["src/db/database.ts", "src/db/migrations/001_init.sql"]
+    },
+    {
+      "id": "A3",
+      "name": "Shared types + utility helpers",
+      "complexity": 1,
+      "agentType": "general-purpose",
+      "instructions": {
+        "layer1": "Create src/lib/types.ts with shared TypeScript types (UserRole enum, ContestStatus enum, layout zone types). Create src/lib/utils.ts with basic helpers (slugify, formatDate, generateId)."
+      },
+      "files": {
+        "create": ["src/lib/types.ts", "src/lib/utils.ts"],
+        "modify": []
+      },
+      "dependencies": [],
+      "outputs": ["src/lib/types.ts", "src/lib/utils.ts"]
+    },
+    {
+      "id": "A4",
+      "name": "SSR layout + middleware + Pico CSS + static files",
+      "complexity": 2,
+      "agentType": "general-purpose",
+      "instructions": {
+        "layer1": "Create the Hono JSX shared layout (src/middleware/layout.tsx) with mobile-first HTML shell: viewport meta, Pico CSS link, PWA manifest link, mobile bottom nav (Home/Contests/Create/Leaderboard/Profile), and slot for page content. Create auth middleware stub (src/middleware/auth.ts) with requireAuth and requireRole. Create error handler middleware (src/middleware/error.ts).",
+        "layer2": "Use Hono's jsxRenderer for the layout. Import Pico CSS from /static/css/pico.min.css. The layout should include: DOCTYPE html, charset UTF-8, viewport meta for mobile, theme-color meta, manifest link, the Pico CSS stylesheet, a <main class='container'> wrapper, and a sticky bottom nav bar. Auth middleware reads a session cookie, looks up session in DB, attaches user to context. For now, stub the DB lookup."
+      },
+      "files": {
+        "create": ["src/middleware/layout.tsx", "src/middleware/auth.ts", "src/middleware/error.ts"],
+        "modify": []
+      },
+      "dependencies": ["A3"],
+      "outputs": ["src/middleware/layout.tsx", "src/middleware/auth.ts", "src/middleware/error.ts"]
+    },
+    {
+      "id": "A5",
+      "name": "WebSocket hub",
+      "complexity": 2,
+      "agentType": "general-purpose",
+      "instructions": {
+        "layer1": "Create src/ws/hub.ts — a WebSocket connection hub that manages channels (e.g. 'contest:123', 'battle:456'), allows subscribing/unsubscribing, and broadcasting messages to channel members. Export the upgradeWebSocket route handler and the websocket export for Bun.serve().",
+        "layer2": "Use Hono's upgradeWebSocket from hono/bun. Maintain a Map<string, Set<WSContext>> for channels. On message, parse JSON {action, channel, data}. Support actions: subscribe, unsubscribe. Provide a broadcast(channel, data) function that other routes can import. Export both the WS route and the websocket handler."
+      },
+      "files": {
+        "create": ["src/ws/hub.ts"],
+        "modify": []
+      },
+      "dependencies": [],
+      "outputs": ["src/ws/hub.ts"]
+    },
+    {
+      "id": "A6",
+      "name": "Domain route stubs (all 12 domains)",
+      "complexity": 1,
+      "agentType": "general-purpose",
+      "instructions": {
+        "layer1": "Create stub route files, repo files, and view directories for all 12 domains: auth, profiles, contests, submissions, battles, judge, host, feed, notifications, settings, media, reports. Each routes.ts should export a Hono sub-app with a single GET / health-check route returning the domain name. Each repo.ts should export an empty class. Each domain gets a views/ directory with a placeholder index.tsx."
+      },
+      "files": {
+        "create": [
+          "src/domains/auth/routes.ts", "src/domains/auth/repo.ts", "src/domains/auth/views/index.tsx",
+          "src/domains/profiles/routes.ts", "src/domains/profiles/repo.ts", "src/domains/profiles/views/index.tsx",
+          "src/domains/contests/routes.ts", "src/domains/contests/repo.ts", "src/domains/contests/views/index.tsx",
+          "src/domains/submissions/routes.ts", "src/domains/submissions/repo.ts", "src/domains/submissions/views/index.tsx",
+          "src/domains/battles/routes.ts", "src/domains/battles/repo.ts", "src/domains/battles/views/index.tsx",
+          "src/domains/judge/routes.ts", "src/domains/judge/repo.ts", "src/domains/judge/views/index.tsx",
+          "src/domains/host/routes.ts", "src/domains/host/repo.ts", "src/domains/host/views/index.tsx",
+          "src/domains/feed/routes.ts", "src/domains/feed/repo.ts", "src/domains/feed/views/index.tsx",
+          "src/domains/notifications/routes.ts", "src/domains/notifications/repo.ts", "src/domains/notifications/views/index.tsx",
+          "src/domains/settings/routes.ts", "src/domains/settings/repo.ts", "src/domains/settings/views/index.tsx",
+          "src/domains/media/routes.ts", "src/domains/media/repo.ts", "src/domains/media/views/index.tsx",
+          "src/domains/reports/routes.ts", "src/domains/reports/repo.ts", "src/domains/reports/views/index.tsx"
+        ],
+        "modify": []
+      },
+      "dependencies": [],
+      "outputs": ["36 domain stub files"]
+    },
+    {
+      "id": "A7",
+      "name": "Static assets: Pico CSS, PWA manifest, service worker, client JS",
+      "complexity": 1,
+      "agentType": "general-purpose",
+      "instructions": {
+        "layer1": "Create static/manifest.json (PWA manifest for Barista Spotlight with icons placeholder, theme color, display standalone). Create static/js/sw.js (service worker shell: cache static assets, offline fallback page, score entry queue stub using IndexedDB). Create static/js/ws-client.js (WebSocket client with auto-reconnect and DOM update helpers). Download or create a Pico CSS placeholder at static/css/pico.min.css (use a CDN comment placeholder for now). Create static/js/scoring.js stub for touch-optimized scoring UI."
+      },
+      "files": {
+        "create": [
+          "static/manifest.json",
+          "static/js/sw.js",
+          "static/js/ws-client.js",
+          "static/js/scoring.js",
+          "static/css/pico.min.css",
+          "static/css/app.css"
+        ],
+        "modify": []
+      },
+      "dependencies": [],
+      "outputs": ["static/*"]
+    },
+    {
+      "id": "A8",
+      "name": "Entry point: src/index.tsx — wire everything together",
+      "complexity": 3,
+      "agentType": "general-purpose",
+      "instructions": {
+        "layer1": "Create src/index.tsx that initializes the Hono app, runs database migrations, mounts the shared JSX layout, mounts all 12 domain route modules under their API prefixes, mounts the WebSocket route, serves static files, and exports {fetch, websocket} for Bun.",
+        "layer2": "Import Hono, serveStatic from hono/bun, the layout middleware, all domain routes, the WS hub, and the database. On startup: run migrations, log success. Mount routes: /auth/*, /api/profiles/*, /api/contests/*, /api/submissions/*, /api/battles/*, /api/judge/*, /api/hosts/*, /api/feed/*, /api/notifications/*, /api/settings/*, /api/media/*, /api/reports/*. Mount /ws for WebSocket. Mount /static/* for static files. Add a root GET / that renders a welcome/home page.",
+        "layer3": "Handle startup errors gracefully (log and exit if DB fails). Add a health check at /api/health. Make sure the websocket export from the hub is re-exported at the top level for Bun.serve(). Use the error middleware for unhandled exceptions."
+      },
+      "files": {
+        "create": ["src/index.tsx"],
+        "modify": []
+      },
+      "dependencies": ["A2", "A4", "A5", "A6", "A7"],
+      "outputs": ["src/index.tsx"]
+    }
+  ],
+  "execution": {
+    "order": ["A1+A3+A5+A6+A7", "A2", "A4", "A8"],
+    "parallelizable": ["A1", "A3", "A5", "A6", "A7"],
+    "checkpoints": [
+      {
+        "after": "A1+A3+A5+A6+A7",
+        "verify": "All config files, types, WS hub, domain stubs, and static assets exist"
+      },
+      {
+        "after": "A2",
+        "verify": "Database initializes with WAL, migrations run, tables created"
+      },
+      {
+        "after": "A4",
+        "verify": "Layout renders HTML with Pico CSS, mobile nav, viewport meta"
+      },
+      {
+        "after": "A8",
+        "verify": "bun run dev starts server, / returns HTML, /api/health returns JSON, /ws upgrades"
+      }
+    ]
+  },
+  "verification": {
+    "finalTests": "bun test",
+    "typeCheck": "bun run --bun tsc --noEmit",
+    "acceptanceCriteria": [
+      "bun run dev starts without errors",
+      "GET / returns mobile-first HTML with Pico CSS",
+      "GET /api/health returns {status:'ok'}",
+      "All 12 domain health routes respond",
+      "WebSocket connects at /ws",
+      "SQLite database created with WAL mode",
+      "Migrations table tracks applied migrations",
+      "PWA manifest served at /static/manifest.json",
+      "Service worker served at /static/js/sw.js"
+    ]
+  }
+}

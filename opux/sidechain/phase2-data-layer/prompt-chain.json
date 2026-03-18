@@ -1,0 +1,70 @@
+{
+  "$schema": "sidechain-prompt-chain-v1",
+  "taskId": "PHASE2-DATA",
+  "name": "Barista Spotlight — Data Layer & Domain Models",
+  "description": "Create contest/scoring/ranking/notification SQLite schema + repository layer for all domains",
+  "complexity": 3,
+  "tdd": true,
+  "subtasks": [
+    {
+      "id": "B1",
+      "name": "Migration 002: Contest + submission tables",
+      "complexity": 2,
+      "agentType": "general-purpose",
+      "dependencies": [],
+      "outputs": ["src/db/migrations/002_contests.sql"]
+    },
+    {
+      "id": "B2",
+      "name": "Migration 003: Scoring + voting tables",
+      "complexity": 2,
+      "agentType": "general-purpose",
+      "dependencies": [],
+      "outputs": ["src/db/migrations/003_scoring.sql"]
+    },
+    {
+      "id": "B3",
+      "name": "Migration 004: Ranking, badges, notifications, opportunities",
+      "complexity": 2,
+      "agentType": "general-purpose",
+      "dependencies": [],
+      "outputs": ["src/db/migrations/004_ranking_misc.sql"]
+    },
+    {
+      "id": "B4",
+      "name": "Auth + Profile repos (full implementation)",
+      "complexity": 2,
+      "agentType": "general-purpose",
+      "dependencies": ["B1"],
+      "outputs": ["src/domains/auth/repo.ts", "src/domains/profiles/repo.ts"]
+    },
+    {
+      "id": "B5",
+      "name": "Contest + Submission repos",
+      "complexity": 3,
+      "agentType": "general-purpose",
+      "dependencies": ["B1"],
+      "outputs": ["src/domains/contests/repo.ts", "src/domains/submissions/repo.ts"]
+    },
+    {
+      "id": "B6",
+      "name": "Scoring + Battle + Judge repos",
+      "complexity": 3,
+      "agentType": "general-purpose",
+      "dependencies": ["B2"],
+      "outputs": ["src/domains/scoring/engine.ts", "src/domains/battles/repo.ts", "src/domains/judge/repo.ts"]
+    },
+    {
+      "id": "B7",
+      "name": "Feed, Ranking, Notification, Host, remaining repos + seed update",
+      "complexity": 2,
+      "agentType": "general-purpose",
+      "dependencies": ["B3"],
+      "outputs": ["src/domains/feed/repo.ts", "src/domains/ranking/repo.ts", "src/domains/notifications/repo.ts", "src/domains/host/repo.ts"]
+    }
+  ],
+  "execution": {
+    "parallelizable": ["B1", "B2", "B3"],
+    "order": ["B1+B2+B3", "B4+B5+B6+B7"]
+  }
+}

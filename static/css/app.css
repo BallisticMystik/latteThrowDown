@@ -1,0 +1,470 @@
+/*
+ * Barista Spotlight — App Styles
+ *
+ * Mobile-first, dark-themed, coffee-branded.
+ *
+ * Brand palette:
+ *   --color-primary:  #d4a574  (warm coffee)
+ *   --color-bg:       #1a1a1a  (dark background)
+ *   --color-surface:  #2a2a2a  (card / elevated surface)
+ */
+
+/* ─── Custom properties ──────────────────────────────────────────────────── */
+:root {
+  --color-primary: #d4a574;
+  --color-primary-hover: #c4915e;
+  --color-primary-fg: #1a1a1a;
+  --color-bg: #1a1a1a;
+  --color-surface: #2a2a2a;
+  --color-surface-raised: #333333;
+  --color-text: #e8e0d8;
+  --color-text-muted: #9a9088;
+  --color-border: #3a3a3a;
+  --color-success: #6fcf97;
+  --color-error: #eb5757;
+  --color-warning: #f2c94c;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+
+  --touch-min: 48px; /* WCAG minimum touch target */
+
+  --nav-height: 64px;
+}
+
+/* ─── Base overrides ─────────────────────────────────────────────────────── */
+html {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+body {
+  min-height: 100dvh;
+  padding-bottom: calc(var(--nav-height) + 16px);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+a {
+  color: var(--color-primary);
+}
+a:hover {
+  color: var(--color-primary-hover);
+}
+
+/* ─── Bottom navigation ──────────────────────────────────────────────────── */
+.bottom-nav {
+  position: fixed;
+  inset: auto 0 0 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: var(--nav-height);
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+.bottom-nav__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1 0;
+  min-width: var(--touch-min);
+  min-height: var(--touch-min);
+  padding: 4px 0;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  font-size: 0.65rem;
+  gap: 2px;
+  transition: color 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.bottom-nav__item:hover,
+.bottom-nav__item[aria-current="page"] {
+  color: var(--color-primary);
+}
+
+.bottom-nav__icon {
+  width: 24px;
+  height: 24px;
+}
+
+/* ─── Contest card ───────────────────────────────────────────────────────── */
+.contest-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 12px;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.contest-card:active {
+  transform: scale(0.98);
+}
+
+.contest-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.contest-card__title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.contest-card__badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  border-radius: 999px;
+  background: var(--color-primary);
+  color: var(--color-primary-fg);
+}
+
+.contest-card__badge--live {
+  background: var(--color-success);
+  color: var(--color-bg);
+}
+
+.contest-card__meta {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin-bottom: 8px;
+}
+
+.contest-card__actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* ─── Battle viewer (split layout) ───────────────────────────────────────── */
+.battle-viewer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 12px 0;
+}
+
+.battle-viewer__side {
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  text-align: center;
+  border: 2px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.battle-viewer__side--left {
+  border-color: var(--color-primary);
+}
+
+.battle-viewer__side--right {
+  border-color: var(--color-text-muted);
+}
+
+.battle-viewer__side--winner {
+  border-color: var(--color-success);
+  box-shadow: 0 0 20px rgba(111, 207, 151, 0.15);
+}
+
+.battle-viewer__avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 8px;
+}
+
+.battle-viewer__name {
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 4px;
+}
+
+.battle-viewer__score {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.battle-viewer__vs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  grid-column: 1 / -1;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* Stack vertically on very narrow screens */
+@media (max-width: 380px) {
+  .battle-viewer {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ─── Scoring UI ─────────────────────────────────────────────────────────── */
+.scoring-panel {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: 20px 16px;
+}
+
+.scoring-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 16px;
+  color: var(--color-text);
+}
+
+.scoring-criterion {
+  margin-bottom: 20px;
+}
+
+.scoring-criterion--touched .scoring-label-text {
+  color: var(--color-primary);
+}
+
+.scoring-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+
+.scoring-label-text {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-text);
+  transition: color 0.15s ease;
+}
+
+.scoring-value {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  min-width: 2.5ch;
+  text-align: right;
+}
+
+/* Slider track & thumb — large touch area */
+.scoring-slider-wrap {
+  position: relative;
+}
+
+.scoring-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--color-surface-raised);
+  outline: none;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
+}
+
+.scoring-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: var(--touch-min);
+  height: var(--touch-min);
+  border-radius: 50%;
+  background: var(--color-primary);
+  border: 3px solid var(--color-bg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  cursor: grab;
+  transition: transform 0.1s ease, background-color 0.15s ease;
+}
+
+.scoring-slider::-webkit-slider-thumb:active {
+  cursor: grabbing;
+  transform: scale(1.15);
+  background: var(--color-primary-hover);
+}
+
+.scoring-slider::-moz-range-thumb {
+  width: var(--touch-min);
+  height: var(--touch-min);
+  border-radius: 50%;
+  background: var(--color-primary);
+  border: 3px solid var(--color-bg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  cursor: grab;
+}
+
+.scoring-slider::-moz-range-thumb:active {
+  cursor: grabbing;
+  transform: scale(1.15);
+  background: var(--color-primary-hover);
+}
+
+.scoring-ticks {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 4px 0;
+}
+
+.scoring-tick {
+  font-size: 0.6rem;
+  color: var(--color-text-muted);
+}
+
+/* Submit button */
+.scoring-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.scoring-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--touch-min);
+  padding: 0 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-primary-fg);
+  background: var(--color-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background 0.15s ease, opacity 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.scoring-submit:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+
+.scoring-submit:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.scoring-status {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+/* ─── Connection status indicator ────────────────────────────────────────── */
+.ws-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--color-surface-raised);
+  color: var(--color-text-muted);
+}
+
+.ws-status::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-text-muted);
+  transition: background 0.2s ease;
+}
+
+.ws-status[data-status="connected"]::before {
+  background: var(--color-success);
+}
+.ws-status[data-status="connected"] {
+  color: var(--color-success);
+}
+
+.ws-status[data-status="reconnecting"]::before {
+  background: var(--color-warning);
+  animation: pulse 1s infinite;
+}
+.ws-status[data-status="reconnecting"] {
+  color: var(--color-warning);
+}
+
+.ws-status[data-status="error"]::before {
+  background: var(--color-error);
+}
+.ws-status[data-status="error"] {
+  color: var(--color-error);
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* ─── Utility classes ────────────────────────────────────────────────────── */
+.text-primary { color: var(--color-primary); }
+.text-muted   { color: var(--color-text-muted); }
+.text-success { color: var(--color-success); }
+.text-error   { color: var(--color-error); }
+.text-warning { color: var(--color-warning); }
+
+.bg-surface       { background: var(--color-surface); }
+.bg-surface-raised { background: var(--color-surface-raised); }
+
+.touch-target {
+  min-width: var(--touch-min);
+  min-height: var(--touch-min);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ─── Responsive adjustments ─────────────────────────────────────────────── */
+
+/* Tablet and up */
+@media (min-width: 768px) {
+  .bottom-nav {
+    max-width: 480px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+
+  .scoring-panel {
+    max-width: 560px;
+    margin: 0 auto;
+  }
+}
+
+/* Desktop: hide bottom nav, use sidebar or top nav instead */
+@media (min-width: 1024px) {
+  body {
+    padding-bottom: 0;
+  }
+
+  .bottom-nav {
+    display: none;
+  }
+}
