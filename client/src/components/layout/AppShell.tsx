@@ -165,7 +165,7 @@ export function AppShell() {
         </header>
 
         {/* Main content with page transitions */}
-        <main className="flex-1 container mx-auto max-w-4xl px-4 pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] lg:pb-8 pt-6">
+        <main className="flex-1 container mx-auto max-w-4xl px-4 pb-[calc(5rem+env(safe-area-inset-bottom,0px))] lg:pb-8 pt-6">
           <AnimatePresence mode="wait">
             <motion.div
               key={location.pathname}
@@ -188,7 +188,7 @@ export function AppShell() {
               to={to}
               end={to === '/'}
               className={({ isActive }) =>
-                `touch-target touch-manipulation flex flex-col items-center justify-center gap-0.5 transition-colors min-h-[56px] ${
+                `touch-target touch-manipulation flex flex-col items-center justify-center gap-0.5 transition-colors min-h-[48px] min-w-[48px] ${
                   isActive ? 'active text-primary' :
                   isAccent ? 'text-warning' :
                   'text-base-content/60'
