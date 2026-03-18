@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Trophy, TrendingUp, Users, Clock, ArrowRight, Flame, Star, Eye, Zap, Radio } from 'lucide-react';
+import { Trophy, TrendingUp, Users, Clock, ArrowRight, Flame, Star, Eye, Zap, Radio, Video, Upload } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { AnimatedCard, StaggerContainer, StaggerItem } from '../components/AnimatedCard';
 import { ProfileCard, type ProfileCardData } from '../components/ProfileCard';
@@ -75,12 +75,39 @@ export default function HomePage() {
 
       {/* Live Now */}
       <section>
-        <h2 className="text-lg font-bold flex items-center gap-2 mb-4">
-          <Radio className="h-5 w-5 text-error" />
-          Live Now
-        </h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-bold flex items-center gap-2">
+            <Radio className="h-5 w-5 text-error" />
+            Live Now
+          </h2>
+          <div className="flex items-center gap-2">
+            <Link to="/content/go-live" className="btn btn-error btn-xs gap-1">
+              <Video className="h-3 w-3" />
+              Go Live
+            </Link>
+            <Link to="/content/live" className="text-sm text-primary hover:underline flex items-center gap-1">
+              Browse <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+        </div>
         <LiveStreamsGrid />
       </section>
+
+      {/* Quick actions: Post Video */}
+      <AnimatedCard className="border-secondary/30 bg-gradient-to-r from-secondary/10 via-base-200 to-primary/10 overflow-hidden" delay={0.1} hover={true}>
+        <div className="card-body p-4 flex-row items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-secondary/20 flex items-center justify-center shrink-0">
+            <Upload className="h-6 w-6 text-secondary" />
+          </div>
+          <div className="flex-1">
+            <h3 className="font-bold">Share Your Pour</h3>
+            <p className="text-xs text-base-content/50 mt-0.5">Upload a video or photo of your latte art to the feed.</p>
+          </div>
+          <Link to="/content/new" className="btn btn-secondary btn-sm gap-1 shrink-0">
+            Post <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
+      </AnimatedCard>
 
       {/* Throwdown CTA */}
       <AnimatedCard className="border-warning/30 bg-gradient-to-r from-warning/10 via-base-200 to-primary/10 overflow-hidden" delay={0.15} hover={true}>

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Clapperboard } from 'lucide-react';
+import { Clapperboard, Video, Upload, Radio } from 'lucide-react';
 import { useContentFeed } from '@/hooks/useContentFeed';
 import { PostCard } from '@/components/content/PostCard';
 
@@ -54,8 +55,12 @@ export default function ContentFeedPage() {
 
   return (
     <div className="flex flex-col h-[calc(100dvh-8rem)] -mx-4 -mt-6">
-      {/* Tab bar */}
-      <div className="flex items-center justify-center gap-1 py-2 bg-base-100/80 backdrop-blur-sm z-10 border-b border-base-300/50">
+      {/* Tab bar with action buttons */}
+      <div className="flex items-center justify-between px-3 py-2 bg-base-100/80 backdrop-blur-sm z-10 border-b border-base-300/50">
+        <Link to="/content/live" className="btn btn-ghost btn-xs gap-1">
+          <Radio className="h-3.5 w-3.5 text-error" />
+          <span className="hidden sm:inline">Live</span>
+        </Link>
         <div role="tablist" className="tabs tabs-boxed tabs-sm bg-base-200">
           <button
             role="tab"
@@ -71,6 +76,14 @@ export default function ContentFeedPage() {
           >
             Following
           </button>
+        </div>
+        <div className="flex gap-1">
+          <Link to="/content/go-live" className="btn btn-ghost btn-xs gap-1 text-error">
+            <Video className="h-3.5 w-3.5" />
+          </Link>
+          <Link to="/content/new" className="btn btn-ghost btn-xs gap-1">
+            <Upload className="h-3.5 w-3.5" />
+          </Link>
         </div>
       </div>
 

@@ -1,5 +1,6 @@
-import { Outlet, NavLink, useLocation } from 'react-router-dom';
-import { Home, Trophy, BarChart3, User, Search, Bell, Coffee, Settings, LogOut, Play, Zap } from 'lucide-react';
+import { useState } from 'react';
+import { Outlet, NavLink, useLocation, Link } from 'react-router-dom';
+import { Home, Trophy, BarChart3, User, Search, Bell, Coffee, Settings, LogOut, Play, Zap, Radio, Video, Plus, X, Upload } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const navItems = [
@@ -19,6 +20,7 @@ const pageTransition = {
 
 export function AppShell() {
   const location = useLocation();
+  const [fabOpen, setFabOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-base-100 text-base-content flex">
@@ -73,8 +75,51 @@ export function AppShell() {
               </NavLink>
             );
           })}
-          {/* Extra sidebar links */}
-          <div className="mt-4 pt-4 border-t border-base-300/50">
+          {/* Live & Create section */}
+          <div className="mt-4 pt-4 border-t border-base-300/50 flex flex-col gap-1">
+            <NavLink
+              to="/content/live"
+              className={({ isActive }) =>
+                `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  isActive
+                    ? 'bg-primary/15 text-primary'
+                    : 'text-base-content/60 hover:text-base-content hover:bg-base-300/50'
+                }`
+              }
+            >
+              {({ isActive }) => (
+                <>
+                  <Radio className="h-5 w-5 shrink-0" strokeWidth={isActive ? 2.5 : 2} />
+                  Live Streams
+                  <span className="ml-auto w-2 h-2 rounded-full bg-error animate-pulse" />
+                </>
+              )}
+            </NavLink>
+            <Link
+              to="/content/go-live"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 bg-error/10 text-error hover:bg-error/20"
+            >
+              <Video className="h-5 w-5 shrink-0" />
+              Go Live
+            </Link>
+            <NavLink
+              to="/content/new"
+              className={({ isActive }) =>
+                `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  isActive
+                    ? 'bg-primary/15 text-primary'
+                    : 'text-base-content/60 hover:text-base-content hover:bg-base-300/50'
+                }`
+              }
+            >
+              {({ isActive }) => (
+                <>
+                  <Upload className="h-5 w-5 shrink-0" strokeWidth={isActive ? 2.5 : 2} />
+                  Post Video
+                </>
+              )}
+            </NavLink>
+
             <NavLink
               to="/throwdown"
               className={({ isActive }) =>
@@ -175,6 +220,71 @@ export function AppShell() {
             </motion.div>
           </AnimatePresence>
         </main>
+      </div>
+
+      {/* Floating action button — mobile only */}
+      <div className="fixed bottom-20 right-4 z-[60] lg:hidden flex flex-col-reverse items-end gap-2">
+        <motion.button
+          className="btn btn-primary btn-circle btn-lg shadow-lg shadow-primary/30"
+          onClick={() => setFabOpen((v) => !v)}
+          animate={{ rotate: fabOpen ? 45 : 0 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+          aria-label="Create content"
+        >
+          {fabOpen ? <X className="h-6 w-6" /> : <Plus className="h-6 w-6" />}
+        </motion.button>
+
+        <AnimatePresence>
+          {fabOpen && (
+            <>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.5, y: 10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.5, y: 10 }}
+                transition={{ duration: 0.2 }}
+              >
+                <Link
+                  to="/content/go-live"
+                  onClick={() => setFabOpen(false)}
+                  className="btn btn-error btn-sm gap-2 shadow-lg"
+                >
+                  <Video className="h-4 w-4" />
+                  Go Live
+                </Link>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.5, y: 10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.5, y: 10 }}
+                transition={{ duration: 0.2, delay: 0.05 }}
+              >
+                <Link
+                  to="/content/new"
+                  onClick={() => setFabOpen(false)}
+                  className="btn btn-secondary btn-sm gap-2 shadow-lg"
+                >
+                  <Upload className="h-4 w-4" />
+                  Post Video
+                </Link>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.5, y: 10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.5, y: 10 }}
+                transition={{ duration: 0.2, delay: 0.1 }}
+              >
+                <Link
+                  to="/content/live"
+                  onClick={() => setFabOpen(false)}
+                  className="btn btn-ghost btn-sm gap-2 bg-base-200 shadow-lg"
+                >
+                  <Radio className="h-4 w-4" />
+                  Watch Live
+                </Link>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Bottom navigation — mobile only, safe area for home indicator */}
